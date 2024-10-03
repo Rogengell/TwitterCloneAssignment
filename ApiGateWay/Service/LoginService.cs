@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ApiGateWay.Data;
 using ApiGateWay.Request_Responce;
+using EFramework.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +38,6 @@ namespace ApiGateWay.Service
                 return new LoginResponce(400, ex.Message);
             }
         }
-
 
         public async Task<LoginResponce> CreateAccount(CreateRequest createRequest)
         {

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Model;
 
-namespace ApiGateWay.Data
+namespace EFramework.Data
 {
     public class AGWDbContext : DbContext
     {

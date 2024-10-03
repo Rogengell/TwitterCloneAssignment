@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApiGateWay.Request_Responce;
 using Microsoft.AspNetCore.Mvc;
-using Model;
 
 
 [ApiController]

@@ -1,5 +1,4 @@
 using ApiGateWay.Request_Responce;
-using Model;
 
 public interface ILoginService
 {

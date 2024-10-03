@@ -8,6 +8,6 @@ while ! nc -z user-db 1433; do
   sleep 5
 done
 
-cd /app/ApiGateWay
+cd /app/EFramework
 dotnet tool install --global dotnet-ef
 /root/.dotnet/tools/dotnet-ef database update

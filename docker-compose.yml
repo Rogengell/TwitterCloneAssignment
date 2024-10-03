@@ -63,7 +63,7 @@ services:
   migration_service:
     build:
       context: .
-      dockerfile: ApiGateWay/Migrations.Dockerfile
+      dockerfile: EFramework/Migrations.Dockerfile
     depends_on:
       user-db:
         condition: service_healthy

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace ApiGateWay.Data
+namespace EFramework.Data
 {
     public class AGWDbContextFactory : IDesignTimeDbContextFactory<AGWDbContext>
     {
