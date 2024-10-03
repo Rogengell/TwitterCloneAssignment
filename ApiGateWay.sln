@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateWay", "ApiGateWay\ApiGateWay.csproj", "{7874F8A5-73A6-4A42-92EB-54153694E14B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginService", "LoginService\LoginService.csproj", "{CF027DF7-4421-4BE2-A10A-82E9ED5BA415}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "UserService\UserService.csproj", "{23AD085A-70F3-4C78-88AA-62AF3E23B035}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7874F8A5-73A6-4A42-92EB-54153694E14B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7874F8A5-73A6-4A42-92EB-54153694E14B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7874F8A5-73A6-4A42-92EB-54153694E14B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7874F8A5-73A6-4A42-92EB-54153694E14B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF027DF7-4421-4BE2-A10A-82E9ED5BA415}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF027DF7-4421-4BE2-A10A-82E9ED5BA415}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF027DF7-4421-4BE2-A10A-82E9ED5BA415}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF027DF7-4421-4BE2-A10A-82E9ED5BA415}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23AD085A-70F3-4C78-88AA-62AF3E23B035}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23AD085A-70F3-4C78-88AA-62AF3E23B035}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23AD085A-70F3-4C78-88AA-62AF3E23B035}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23AD085A-70F3-4C78-88AA-62AF3E23B035}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
