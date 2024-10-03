@@ -11,7 +11,7 @@ public class Login
 {
     private readonly static AGWDbContext _context = new AGWDbContextFactory().CreateDbContext();
     private static IBus _bus;
-    static async void Main(string[] args)
+    static async Task Main(string[] args)
     {
         await StartLisener();
         Console.ReadLine();
@@ -21,7 +21,7 @@ public class Login
     {
         if (_bus == null)
         {
-            string rabbitMqConnectionString = "host=localhost"; // Update as necessary
+            string rabbitMqConnectionString = "host=localhost;username=application;password=pepsi"; // Update as necessary
             _bus = RabbitHutch.CreateBus(rabbitMqConnectionString);
         }
             

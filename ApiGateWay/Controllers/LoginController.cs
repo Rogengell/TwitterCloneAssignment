@@ -44,7 +44,7 @@ public class LoginController : Controller
         }
     }
 
-    [HttpPut("Login")]
+    [HttpPut("Create")]
     public async Task<IActionResult> CreateAccount([FromBody] CreateRequest request)
     {
         if (!ModelState.IsValid)
@@ -70,7 +70,7 @@ public class LoginController : Controller
         }
     }
 
-    [HttpPost("Login")]
+    [HttpPost("Update")]
     public async Task<IActionResult> UpdateAccount([FromBody] UpdateRequest updateRequest)
     {
         if (!ModelState.IsValid)
@@ -96,7 +96,7 @@ public class LoginController : Controller
         }
     }
 
-    [HttpDelete("Login")]
+    [HttpDelete("Delete")]
     public async Task<IActionResult> DeleteAccount([FromBody] DeleteRequest request)
     {
         if (!ModelState.IsValid)

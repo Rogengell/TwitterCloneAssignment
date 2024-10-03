@@ -19,21 +19,21 @@ services:
     build:
       context: .
       dockerfile: apigateway/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - 8080:8080
-    depends_on:
-      - userservice
-      - loginservice
+#    depends_on:
+#      - userservice
+#      - loginservice
         
-  userservice:
-    build:
-      context: .
-      dockerfile: userservice/Dockerfile
-    depends_on:
-      user-db:
-        condition: service_healthy
-      rmq:
-        condition: service_healthy
+#  userservice:
+#    build:
+#      context: .
+#      dockerfile: userservice/Dockerfile
+#    depends_on:
+#      user-db:
+#        condition: service_healthy
   
   loginservice:
     build:
@@ -41,8 +41,6 @@ services:
       dockerfile: loginservice/Dockerfile
     depends_on:
       user-db:
-        condition: service_healthy
-      rmq:
         condition: service_healthy
   
   rmq:
@@ -53,12 +51,6 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=application
       - RABBITMQ_DEFAULT_PASS=pepsi
-    healthcheck:
-      test: [ "CMD-SHELL", "pgrep rmq" ]
-      interval: 10s
-      retries: 1
-      start_period: 60s
-      timeout: 5s
 
   migration_service:
     build:

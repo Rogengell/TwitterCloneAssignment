@@ -2,7 +2,7 @@
 # Esben and Asbjørn fandt ud af dette
 
 # for the DB to be fully startet and ready for changes if any
-sleep 60
+sleep 1
 
 while ! nc -z user-db 1433; do
   sleep 5

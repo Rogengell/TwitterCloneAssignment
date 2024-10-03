@@ -14,11 +14,9 @@ namespace ApiGateWay.Service
 {
     public class LoginService : ILoginService
     {
-        private readonly AGWDbContext _context;
         private readonly IBus _bus;
-        public LoginService(AGWDbContext context,IBus bus)
+        public LoginService(IBus bus)
         {
-            _context = context;
             _bus = bus;
         }
 
@@ -26,13 +24,15 @@ namespace ApiGateWay.Service
         {
             try
             {
+                Console.WriteLine();
+
                 var replyQueue = "Login_queue_" + System.Guid.NewGuid();
                 var LoginRequest = new LoginRequest(email, password, replyQueue);
 
                 await _bus.PubSub.PublishAsync(LoginRequest);
-
+      
                 GeneralResponce generalResponce = null;
-                var subscriptionResult = _bus.PubSub.Subscribe<GeneralResponce>(replyQueue, result =>
+                var subscriptionResult = _bus.PubSub.SubscribeAsync<GeneralResponce>(replyQueue, result =>
                 {
                     generalResponce = result;
                 });
@@ -43,8 +43,6 @@ namespace ApiGateWay.Service
                     await Task.Delay(1000);
                     count++;
                 }
-
-                subscriptionResult.Dispose();
 
                 if (generalResponce?._status == 200)
                 {
