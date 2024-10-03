@@ -14,5 +14,14 @@ namespace ApiGateWay.Request_Responce
         [Required]
         [StringLength(int.MaxValue, MinimumLength = 1)]
         public string? password { get; set; }
+        [Required]
+        public string? ReplyTo { get; set; } 
+
+        public CreateRequest(string email, string password, string replyTo)
+        {
+            this.email = email;
+            this.password = password;
+            this.ReplyTo = replyTo;
+        }
     }
 }

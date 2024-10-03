@@ -4,6 +4,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiGateWay.Request_Responce;
+using EasyNetQ;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -33,7 +34,7 @@ public class LoginController : Controller
             }
             else 
             {
-                return StatusCode(result._status,result._message);
+                return StatusCode(result._status, result._message);
             }
         }
         catch (System.Exception ex)

@@ -15,30 +15,30 @@ services:
       start_period: 60s
       timeout: 5s
 
-  ApiGateWay:
+  apigateway:
     build:
       context: .
-      dockerfile: ApiGateWay/Dockerfile
+      dockerfile: apigateway/Dockerfile
     ports:
       - 8080:8080
     depends_on:
-      - userService
-      - LoginService
+      - userservice
+      - loginservice
         
-  userService:
+  userservice:
     build:
       context: .
-      dockerfile: UserService/Dockerfile
+      dockerfile: userservice/Dockerfile
     depends_on:
       user-db:
         condition: service_healthy
       rmq:
         condition: service_healthy
   
-  LoginService:
+  loginservice:
     build:
       context: .
-      dockerfile: LoginService/Dockerfile
+      dockerfile: loginservice/Dockerfile
     depends_on:
       user-db:
         condition: service_healthy

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiGateWay.Request_Responce;
+using EasyNetQ;
 using EFramework.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -14,91 +15,158 @@ namespace ApiGateWay.Service
     public class LoginService : ILoginService
     {
         private readonly AGWDbContext _context;
-        public LoginService(AGWDbContext context)
+        private readonly IBus _bus;
+        public LoginService(AGWDbContext context,IBus bus)
         {
             _context = context;
+            _bus = bus;
         }
 
-        public async Task<LoginResponce> Login(string email, string password)
+        public async Task<GeneralResponce> Login(string email, string password)
         {
             try
             {
-                var user = await _context.usersTables
-                    .Where(u => u.Email == email && u.Password == password).FirstOrDefaultAsync();
+                var replyQueue = "Login_queue_" + System.Guid.NewGuid();
+                var LoginRequest = new LoginRequest(email, password, replyQueue);
 
-                if (user == null)
+                await _bus.PubSub.PublishAsync(LoginRequest);
+
+                GeneralResponce generalResponce = null;
+                var subscriptionResult = _bus.PubSub.Subscribe<GeneralResponce>(replyQueue, result =>
                 {
-                    return new LoginResponce(404, "User not found");
+                    generalResponce = result;
+                });
+
+                int count = 0;
+                while (generalResponce == null && count < 10)
+                {
+                    await Task.Delay(1000);
+                    count++;
                 }
-                return new LoginResponce(200, "Success", user);;
+
+                subscriptionResult.Dispose();
+
+                if (generalResponce?._status == 200)
+                {
+                    return new GeneralResponce(200, "Success", generalResponce._user); 
+                }
+                return new GeneralResponce(404, "User not found");
             }
             catch (System.Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return new LoginResponce(400, ex.Message);
+                return new GeneralResponce(400, ex.Message);
             }
         }
 
-        public async Task<LoginResponce> CreateAccount(CreateRequest createRequest)
+        public async Task<GeneralResponce> CreateAccount(CreateRequest createRequest)
         {
             try
             {
-                _context.usersTables?.Add(new UsersTable{
-                    Email = createRequest.email,
-                    Password = createRequest.password
+                var replyQueue = "Create_Account_queue_" + System.Guid.NewGuid();
+                createRequest.ReplyTo=replyQueue;
+
+                await _bus.PubSub.PublishAsync(createRequest);
+
+                GeneralResponce generalResponce = null;
+                var subscriptionResult = _bus.PubSub.Subscribe<GeneralResponce>(replyQueue, result =>
+                {
+                    generalResponce = result;
                 });
-                await _context.SaveChangesAsync();
-                return new LoginResponce(200, "Success");
+
+                int count = 0;
+                while (generalResponce == null && count < 10)
+                {
+                    await Task.Delay(1000);
+                    count++;
+                }
+
+                subscriptionResult.Dispose();
+
+                if (generalResponce?._status == 200)
+                {
+                    return new GeneralResponce(200, "Success"); 
+                }
+                return new GeneralResponce(404, "Create Failed");
             }
             catch (System.Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return new LoginResponce(400, ex.Message);
+                return new GeneralResponce(400, ex.Message);
             }
         }
 
-        public async Task<LoginResponce> UpdateAccount(UpdateRequest updateRequest)
+        public async Task<GeneralResponce> UpdateAccount(UpdateRequest updateRequest)
         {
             try
             {
-                _context.usersTables?.Update(new UsersTable{
-                    Id = (int)updateRequest.Id,
-                    Email = updateRequest.Email,
-                    Password = updateRequest.Password,
-                    UserName = updateRequest.UserName,
-                    Mobile = updateRequest.Mobile,
-                    Address = updateRequest.Address,
-                    FirstName = updateRequest.FirstName,
-                    LastName = updateRequest.LastName,
-                    Gender = updateRequest.Gender
-  
+                var replyQueue = "Update_Account_queue_" + System.Guid.NewGuid();
+                updateRequest.ReplyTo=replyQueue;
+
+                await _bus.PubSub.PublishAsync(updateRequest);
+
+                GeneralResponce generalResponce = null;
+                var subscriptionResult = _bus.PubSub.Subscribe<GeneralResponce>(replyQueue, result =>
+                {
+                    generalResponce = result;
                 });
-                await _context.SaveChangesAsync();
-                return new LoginResponce(200, "Success");
+
+                int count = 0;
+                while (generalResponce == null && count < 10)
+                {
+                    await Task.Delay(1000);
+                    count++;
+                }
+
+                subscriptionResult.Dispose();
+
+                if (generalResponce?._status == 200)
+                {
+                    return new GeneralResponce(200, "Success"); 
+                }
+                return new GeneralResponce(404, "Account Update Failed");
             }
             catch (System.Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return new LoginResponce(400, ex.Message);
+                return new GeneralResponce(400, ex.Message);
             }
         }
 
-        public async Task<LoginResponce> DeleteAccount(DeleteRequest deleteRequest)
+        public async Task<GeneralResponce> DeleteAccount(DeleteRequest deleteRequest)
         {
-             try
+            try
             {
-                _context.usersTables?.Remove(new UsersTable{
-                    Id = (int)deleteRequest.Id,
-                    Email = deleteRequest.email,
-                    Password = deleteRequest.password
+                var replyQueue = "Delete_Account_queue_" + System.Guid.NewGuid();
+                deleteRequest.ReplyTo=replyQueue;
+
+                await _bus.PubSub.PublishAsync(deleteRequest);
+
+                GeneralResponce generalResponce = null;
+                var subscriptionResult = _bus.PubSub.Subscribe<GeneralResponce>(replyQueue, result =>
+                {
+                    generalResponce = result;
                 });
-                await _context.SaveChangesAsync();
-                return new LoginResponce(200, "Success");
+
+                int count = 0;
+                while (generalResponce == null && count < 10)
+                {
+                    await Task.Delay(1000);
+                    count++;
+                }
+
+                subscriptionResult.Dispose();
+
+                if (generalResponce?._status == 200)
+                {
+                    return new GeneralResponce(200, "Success", generalResponce._user); 
+                }
+                return new GeneralResponce(404, "Delete Account Failed");
             }
             catch (System.Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return new LoginResponce(400, ex.Message);
+                return new GeneralResponce(400, ex.Message);
             }
         }
     }

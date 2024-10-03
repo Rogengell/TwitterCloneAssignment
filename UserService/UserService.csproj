@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyNetQ" Version="8.0.0-beta98" />
     <ProjectReference Include="..\EFramework\EFramework.csproj" />
+    <ProjectReference Include="..\ApiGateWay\ApiGateWay.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EasyNetQ" Version="7.8.0" />
   </ItemGroup>
 
 </Project>

@@ -15,6 +15,8 @@ namespace ApiGateWay.Request_Responce
         [Required]
         [Range(1, int.MaxValue)]
         public int? Id { get; set; }
+        [Required]
+        public string? ReplyTo { get; set; } 
         public string? UserName { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }

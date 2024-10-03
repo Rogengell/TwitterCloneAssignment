@@ -17,5 +17,15 @@ namespace ApiGateWay.Request_Responce
         [Required]
         [Range(1, int.MaxValue)]
         public int? Id { get; set; }
+        [Required]
+        public string? ReplyTo { get; set; } 
+
+        public DeleteRequest(string email, string password, int Id, string replyTo)
+        {
+            this.email = email;
+            this.password = password;
+            this.Id = Id;
+            this.ReplyTo = replyTo;
+        }
     }
 }
