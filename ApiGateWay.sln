@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "UserService\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFramework", "EFramework\EFramework.csproj", "{C3FFCDB6-ED77-46DA-8F04-5BCD59E9CDAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heplers", "Heplers\Heplers.csproj", "{F0BD4D37-1144-42C1-B909-11ABB05231E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpers", "Helpers\Helpers.csproj", "{F0BD4D37-1144-42C1-B909-11ABB05231E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -3,12 +3,12 @@ using EasyNetQ.DI;
 using EasyNetQ.Serialization;
 using EasyNetQ.Serialization.SystemTextJson;
 
-namespace ApiGateWay;
+namespace Helpers;
 
-public class ConnectionHelper
+public static class ConnectionHelper
 {
 
-    public IBus GetRMQConnection()
+    public static IBus GetRMQConnection()
     {
         return RabbitHutch.CreateBus("host=rmq;username=application;password=pepsi",
             serviceRegister => serviceRegister.Register<ISerializer, SystemTextJsonSerializer>());

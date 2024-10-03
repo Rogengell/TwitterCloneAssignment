@@ -32,7 +32,7 @@ namespace ApiGateWay.Service
                 await _bus.PubSub.PublishAsync(LoginRequest);
       
                 GeneralResponce generalResponce = null;
-                var subscriptionResult = _bus.PubSub.SubscribeAsync<GeneralResponce>(replyQueue, result =>
+                var subscriptionResult = _bus.PubSub.Subscribe<GeneralResponce>(replyQueue, result =>
                 {
                     generalResponce = result;
                 });
@@ -43,6 +43,8 @@ namespace ApiGateWay.Service
                     await Task.Delay(1000);
                     count++;
                 }
+
+                subscriptionResult.Dispose();
 
                 if (generalResponce?._status == 200)
                 {

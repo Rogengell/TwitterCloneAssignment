@@ -2,12 +2,12 @@ using ApiGateWay;
 using ApiGateWay.Service;
 using EasyNetQ;
 using EasyNetQ.Internals;
-using Helpers:
+using Helpers;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<IBus>(new ConnectionHelper().GetRMQConnection());
+builder.Services.AddSingleton<IBus>(ConnectionHelper.GetRMQConnection());
 
 builder.Services.AddScoped<ILoginService, LoginService>();
 

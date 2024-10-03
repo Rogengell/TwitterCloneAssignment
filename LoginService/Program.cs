@@ -1,9 +1,11 @@
 ﻿using ApiGateWay.Request_Responce;
 using EasyNetQ;
 using EFramework.Data;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Model;
+using Helpers;
 
 namespace LoginService;
 
@@ -14,24 +16,20 @@ public class Login
     static async Task Main(string[] args)
     {
         await StartLisener();
-        Console.ReadLine();
+        while (true);
     }
 
     public static async Task StartLisener()
     {
         if (_bus == null)
         {
-            string rabbitMqConnectionString = "host=localhost;username=application;password=pepsi"; // Update as necessary
-            _bus = RabbitHutch.CreateBus(rabbitMqConnectionString);
+            _bus = ConnectionHelper.GetRMQConnection();
         }
             
         _bus.PubSub.Subscribe<ApiGateWay.Request_Responce.LoginRequest>("loginSubscription", LoginStart);
         _bus.PubSub.Subscribe<ApiGateWay.Request_Responce.CreateRequest>("loginSubscription", CreateUser);
         _bus.PubSub.Subscribe<ApiGateWay.Request_Responce.UpdateRequest>("loginSubscription", UpdateUser);
         _bus.PubSub.Subscribe<ApiGateWay.Request_Responce.DeleteRequest>("loginSubscription", DeleteUser);
-
-        Console.ReadLine();
-        StopListener();
     }
 
     public static void StopListener()
