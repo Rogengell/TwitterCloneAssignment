@@ -19,6 +19,8 @@ services:
     build:
       context: .
       dockerfile: ApiGateWay/Dockerfile
+    ports:
+      - 8080:8080
     depends_on:
       - userService
       - LoginService

@@ -1,21 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Model
+namespace ApiGateWay.Request_Responce
 {
-    public class UsersTable
+    public class UpdateRequest
     {
-        [Key]
         [Required]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         [Required]
-        public string Password { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public string? Password { get; set; }
+        [Required]
+        [Range(1, int.MaxValue)]
+        public int? Id { get; set; }
         public string? UserName { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
