@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateWay", "ApiGateWay\ApiGateWay.csproj", "{7874F8A5-73A6-4A42-92EB-54153694E14B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "UserService\UserService.csproj", "{23AD085A-70F3-4C78-88AA-62AF3E23B035}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFramework", "EFramework\EFramework.csproj", "{C3FFCDB6-ED77-46DA-8F04-5BCD59E9CDAB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginServiceApi", "LoginServiceApi\LoginServiceApi.csproj", "{EC63B39B-249F-4E24-84AF-B8BEB54A799F}"
