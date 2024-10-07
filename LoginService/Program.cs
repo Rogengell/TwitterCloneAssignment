@@ -42,23 +42,27 @@ public class Login
     {
         try
             {
+                System.Console.WriteLine("LoginStart");
                 var user = await _context.usersTables
                     .Where(u => u.Email == loginRequest.Email && u.Password == loginRequest.Password).FirstOrDefaultAsync();
-
+                System.Console.WriteLine("Database Query Complete");
                 if (user == null)
                 {
+                    System.Console.WriteLine("User not found");
                     var searchResult = new GeneralResponce(404, "User not found");
                     await _bus.PubSub.PublishAsync(searchResult, loginRequest.ReplyTo);
                 }
                 else
                 {
+                    System.Console.WriteLine("User found");
                     var searchResult = new GeneralResponce(200, "Success", user);
+                    System.Console.WriteLine(loginRequest.ReplyTo);
                     await _bus.PubSub.PublishAsync(searchResult, loginRequest.ReplyTo);
                 }
             }
             catch (System.Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("Crashed create" + ex.Message);
                 var searchResult = new GeneralResponce(400, ex.Message);
                 await _bus.PubSub.PublishAsync(searchResult, loginRequest.ReplyTo);
             }
@@ -68,16 +72,25 @@ public class Login
     {
         try
             {
+                System.Console.WriteLine("CreateUser");
+                System.Console.WriteLine(createRequest.email);
+                System.Console.WriteLine(createRequest.password);
                 _context.usersTables?.Add(new UsersTable{
                     Email = createRequest.email,
                     Password = createRequest.password
                 });
                 await _context.SaveChangesAsync();
+                System.Console.WriteLine("CreateUser Saved");
                 var searchResult = new GeneralResponce(200, "Success");
+                System.Console.WriteLine("Fin");
                 await _bus.PubSub.PublishAsync(searchResult, createRequest.ReplyTo);
             }
             catch (System.Exception ex)
             {
+                System.Console.WriteLine("Crached create " + ex.Message);
+                System.Console.WriteLine(ex.InnerException?.Message);
+                System.Console.WriteLine(ex.Source);
+
                 var searchResult = new GeneralResponce(400, ex.Message);
                 await _bus.PubSub.PublishAsync(searchResult, createRequest.ReplyTo);
             }

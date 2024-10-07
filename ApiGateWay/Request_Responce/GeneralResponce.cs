@@ -12,10 +12,10 @@ namespace ApiGateWay.Request_Responce
         public int _status { get; set; }
         public string _message { get; set;}
         public UsersTable? _user { get; set; }
-        [Required]
-        public string? ReplyTo { get; set; } 
 
-
+        public GeneralResponce()
+        {
+        }
         public GeneralResponce(int status, string message, UsersTable user)
         {
             _status = status;

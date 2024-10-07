@@ -25,15 +25,20 @@ public class LoginController : Controller
         {
             return StatusCode(400,"Empty username or password");
         }
+        Console.WriteLine("Login");
         try
         {
+            Console.WriteLine("before service");
             var result = await _service.Login(username,password);
+            System.Console.WriteLine("after service");
             if(result._status == 200)
             {
+                System.Console.WriteLine("200");
                 return StatusCode(200,result);
             }
             else 
             {
+                System.Console.WriteLine(result._status);
                 return StatusCode(result._status, result._message);
             }
         }

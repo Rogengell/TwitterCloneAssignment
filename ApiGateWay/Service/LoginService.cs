@@ -27,24 +27,25 @@ namespace ApiGateWay.Service
                 Console.WriteLine();
 
                 var replyQueue = "Login_queue_" + System.Guid.NewGuid();
+                System.Console.WriteLine(replyQueue);
                 var LoginRequest = new LoginRequest(email, password, replyQueue);
 
-                await _bus.PubSub.PublishAsync(LoginRequest);
-      
-                GeneralResponce generalResponce = null;
+                var tcs = new TaskCompletionSource<GeneralResponce>();
+
                 var subscriptionResult = _bus.PubSub.Subscribe<GeneralResponce>(replyQueue, result =>
                 {
-                    generalResponce = result;
+                    tcs.SetResult(result);
                 });
 
-                int count = 0;
-                while (generalResponce == null && count < 10)
-                {
-                    await Task.Delay(1000);
-                    count++;
-                }
+                await _bus.PubSub.PublishAsync(LoginRequest);
+
+                var generalResponce = await tcs.Task;
 
                 subscriptionResult.Dispose();
+
+                System.Console.WriteLine(generalResponce._status);
+                System.Console.WriteLine(generalResponce._message);
+                System.Console.WriteLine(generalResponce._user);
 
                 if (generalResponce?._status == 200)
                 {
