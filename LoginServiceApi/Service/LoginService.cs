@@ -15,9 +15,9 @@ namespace LoginServiceApi.Service
     public class LoginService : LoginServiceApi.Service.ILoginService
     {
         private readonly AGWDbContext _context;
-        public LoginService()
+        public LoginService(AGWDbContext dbContext)
         {
-            _context = new AGWDbContextFactory().CreateDbContext();
+            _context = dbContext;
         }
 
         public async Task<GeneralResponce> Login(LoginRequest loginRequest)

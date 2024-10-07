@@ -10,7 +10,6 @@
   <ItemGroup>
     <ProjectReference Include="..\EFramework\EFramework.csproj" />
     <ProjectReference Include="..\ApiGateWay\ApiGateWay.csproj" />
-    <ProjectReference Include="..\Helpers\Helpers.csproj" />
   </ItemGroup>
 
   <ItemGroup>

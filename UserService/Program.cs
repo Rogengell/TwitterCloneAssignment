@@ -1,7 +1,6 @@
 ﻿using ApiGateWay.Request_Responce;
 using EasyNetQ;
 using EFramework.Data;
-using Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace UserService;
@@ -22,7 +21,7 @@ public class User
     {
         if (_bus == null)
         {
-            _bus = ConnectionHelper.GetRMQConnection();
+            
         }
 
         _bus.PubSub.Subscribe<ApiGateWay.Request_Responce.UserRequest>("userSubscription", GetAllUser);
