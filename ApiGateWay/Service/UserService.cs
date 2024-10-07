@@ -28,11 +28,17 @@ namespace ApiGateWay.Service
                     generalResponce = result;
                 });
 
-                subscriptionResult.Dispose();
 
                 while (generalResponce == null)
                 {
-                    return new GeneralResponce(200, "Success");
+                    await Task.Delay(1000);
+                }
+
+                subscriptionResult.Dispose();
+
+                if (generalResponce._status == 200)
+                {
+                    return new GeneralResponce(200, "Success", generalResponce._users);
                 }
 
                 return new GeneralResponce(404, "no user found");
@@ -45,13 +51,46 @@ namespace ApiGateWay.Service
         }
 
 
-        public Task<GeneralResponce> GetUser(string searchRequest)
+        public async Task<GeneralResponce> GetUser(string searchRequest)
         {
-            //TODO: implement GetUser logic for rmq
-            throw new NotImplementedException();
+            try
+            {
+                Console.WriteLine("Getting users by username");
+
+                var replyQueue = "GetAllUser_queue_" + System.Guid.NewGuid();
+                var getUsers = new UserRequest("GetUser", searchRequest, replyQueue);
+
+                await _bus.PubSub.PublishAsync(getUsers);
+
+                GeneralResponce? generalResponce = null;
+                var subscriptionResult = _bus.PubSub.Subscribe<GeneralResponce>(replyQueue, result =>
+                {
+                    generalResponce = result;
+                });
+
+
+                while (generalResponce == null)
+                {
+                    await Task.Delay(1000);
+                }
+
+                subscriptionResult.Dispose();
+
+                if (generalResponce._status == 200)
+                {
+                    return new GeneralResponce(200, "Success", generalResponce._users);
+                }
+
+                return new GeneralResponce(404, "no user found with the username: " + searchRequest);
+            }
+            catch (System.Exception ex)
+            {
+                return new GeneralResponce(400, ex.Message);
+                throw;
+            }
         }
 
-        public Task<GeneralResponce> GetUserByTag(string createRequest)
+        public async Task<GeneralResponce> GetUserByTag(string createRequest)
         {
             //TODO: implement GetUserByTag logic for rmq
             throw new NotImplementedException();
