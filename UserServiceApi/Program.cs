@@ -1,20 +1,20 @@
+using EFramework;
 using EFramework.Data;
 using Microsoft.EntityFrameworkCore;
-
+using UserServiceApi.Service;
 var builder = WebApplication.CreateBuilder(args);
+
+var configuration = builder.Configuration;
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var dbContextFactory = new AGWDbContextFactory();
+builder.Services.AddScoped<IUserService, UserService>();
 
-// Register the DbContext using the factory
 builder.Services.AddDbContext<AGWDbContext>(options =>
-{
-    var context = dbContextFactory.CreateDbContext();
-    options.UseSqlServer(context.Database.GetDbConnection().ConnectionString); // Get the connection string from your context
-});
+    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
+);
 
 var app = builder.Build();
 
@@ -27,6 +27,5 @@ if (app.Environment.IsDevelopment())
 
 app.MapControllers();
 //app.UseHttpsRedirection();
-
 
 app.Run();
