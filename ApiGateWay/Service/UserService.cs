@@ -1,11 +1,11 @@
 using ApiGateWay.Request_Responce;
 using EasyNetQ;
+using Newtonsoft.Json;
 
 namespace ApiGateWay.Service
 {
     public class UserService : IUserService
     {
-        private readonly IBus _bus;
         public UserService()
         {
         }
@@ -15,37 +15,29 @@ namespace ApiGateWay.Service
             try
             {
                 Console.WriteLine("Getting all users");
+                
+                HttpClient client = new HttpClient();
+                UserRequest userRequest = new UserRequest();
+                
+                string json = JsonConvert.SerializeObject(userRequest);
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                
+                HttpResponseMessage response = await client.PostAsync("http://userserviceapi:8081/UserServiceApi/GetAllUser", content);
 
-                var replyQueue = "GetAllUser_queue_" + System.Guid.NewGuid();
-                var getAllUsers = replyQueue;
+                string responseBody = await response.Content.ReadAsStringAsync();
 
-                await _bus.PubSub.PublishAsync(getAllUsers);
-
-                GeneralResponce? generalResponce = null;
-                var subscriptionResult = _bus.PubSub.Subscribe<GeneralResponce>(replyQueue, result =>
-                {
-                    generalResponce = result;
-                });
-
-
-                while (generalResponce == null)
-                {
-                    await Task.Delay(1000);
-                }
-
-                subscriptionResult.Dispose();
+                var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
 
                 if (generalResponce._status == 200)
                 {
                     return new GeneralResponce(200, "Success", generalResponce._users);
                 }
 
-                return new GeneralResponce(404, "no user found");
+                return new GeneralResponce(404, generalResponce._message);
             }
             catch (System.Exception ex)
             {
                 return new GeneralResponce(400, ex.Message);
-                throw;
             }
         }
 
@@ -54,45 +46,62 @@ namespace ApiGateWay.Service
         {
             try
             {
-                Console.WriteLine("Getting users by username");
+                Console.WriteLine("Getting all users");
+                
+                HttpClient client = new HttpClient();
+                UserRequest userRequest = new UserRequest(searchRequest);
+                
+                string json = JsonConvert.SerializeObject(userRequest);
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                
+                HttpResponseMessage response = await client.PostAsync("http://userserviceapi:8081/UserServiceApi/GetUser", content);
 
-                var replyQueue = "GetAllUser_queue_" + System.Guid.NewGuid();
-                var getUsers = new UserRequest("GetUser", searchRequest, replyQueue);
+                string responseBody = await response.Content.ReadAsStringAsync();
 
-                await _bus.PubSub.PublishAsync(getUsers);
-
-                GeneralResponce? generalResponce = null;
-                var subscriptionResult = _bus.PubSub.Subscribe<GeneralResponce>(replyQueue, result =>
-                {
-                    generalResponce = result;
-                });
-
-
-                while (generalResponce == null)
-                {
-                    await Task.Delay(1000);
-                }
-
-                subscriptionResult.Dispose();
+                var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
 
                 if (generalResponce._status == 200)
                 {
                     return new GeneralResponce(200, "Success", generalResponce._users);
                 }
 
-                return new GeneralResponce(404, "no user found with the username: " + searchRequest);
+                return new GeneralResponce(404, generalResponce._message);
             }
             catch (System.Exception ex)
             {
                 return new GeneralResponce(400, ex.Message);
-                throw;
             }
         }
 
-        public async Task<GeneralResponce> GetUserByTag(string createRequest)
+        public async Task<GeneralResponce> GetUserByTag(string searchRequest)
         {
-            //TODO: implement GetUserByTag logic for rmq
-            throw new NotImplementedException();
+            try
+            {
+                Console.WriteLine("Getting all users");
+                
+                HttpClient client = new HttpClient();
+                UserRequest userRequest = new UserRequest(searchRequest);
+                
+                string json = JsonConvert.SerializeObject(userRequest);
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                
+                HttpResponseMessage response = await client.PostAsync("http://userserviceapi:8081/UserServiceApi/GetUserByTag", content);
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
+
+                if (generalResponce._status == 200)
+                {
+                    return new GeneralResponce(200, "Success", generalResponce._users);
+                }
+
+                return new GeneralResponce(404, generalResponce._message);
+            }
+            catch (System.Exception ex)
+            {
+                return new GeneralResponce(400, ex.Message);
+            }
         }
     }
 }
