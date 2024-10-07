@@ -2,11 +2,93 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApiGateWay.Service;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ApiGateWay.Controllers
 {
-    public class UserController
+    [ApiController]
+    [Route("[controller]")]
+    public class UserController : ControllerBase
     {
-        
+        private readonly IUserService _service;
+
+        public UserController(IUserService service)
+        {
+            _service = service;
+        }
+        [HttpGet("GetAllUser")]
+        public async Task<IActionResult> GetAllUser()
+        {
+            try
+            {
+                var result = await _service.GetAllUser();
+                if (result._status == 200)
+                {
+                    return StatusCode(200, result);
+                }
+                else
+                {
+                    return StatusCode(result._status, result._message);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine("Something went wrong GetAllUser" + ex.Message);
+                return StatusCode(400, ex.Message);
+            }
+        }
+
+        [HttpPost("GetUser")]
+        public async Task<IActionResult> GetUser(string searchRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(400, "Invalid data");
+            }
+            try
+            {
+                var result = await _service.GetUser(searchRequest);
+                if (result._status == 200)
+                {
+                    return StatusCode(200, result);
+                }
+                else
+                {
+                    return StatusCode(result._status, result._message);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine("Something went wrong GetUser" + ex.Message);
+                return StatusCode(400, ex.Message);
+            }
+        }
+
+        [HttpPost("GetUserByTag")]
+        public async Task<IActionResult> GetUserByTag(string searchRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(400, "Invalid data");
+            }
+            try
+            {
+                var result = await _service.GetUserByTag(searchRequest);
+                if (result._status == 200)
+                {
+                    return StatusCode(200, result);
+                }
+                else
+                {
+                    return StatusCode(result._status, result._message);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine("Something went wrong GetUserByTag" + ex.Message);
+                return StatusCode(400, ex.Message);
+            }
+        }
     }
 }

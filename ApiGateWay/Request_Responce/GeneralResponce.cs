@@ -10,8 +10,12 @@ namespace ApiGateWay.Request_Responce
     public class GeneralResponce
     {
         public int _status { get; set; }
-        public string _message { get; set;}
+        public string _message { get; set; }
         public UsersTable? _user { get; set; }
+        [Required]
+        public string? ReplyTo { get; set; }
+        public List<UsersTable>? _users { get; set; }
+
 
         public GeneralResponce()
         {
@@ -27,6 +31,13 @@ namespace ApiGateWay.Request_Responce
         {
             _status = status;
             _message = message;
+        }
+
+        public GeneralResponce(int status, string message, List<UsersTable> users)
+        {
+            _status = status;
+            _message = message;
+            _users = users;
         }
     }
 }
