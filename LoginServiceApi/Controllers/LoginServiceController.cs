@@ -1,27 +1,25 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiGateWay.Request_Responce;
-using EasyNetQ;
+using EFramework.Data;
 using Microsoft.AspNetCore.Mvc;
-
 
 [ApiController]
 [Route("[controller]")]
-public class LoginController : Controller
+public class LoginServiceController : Controller
 {
-    private readonly ApiGateWay.Service.ILoginService _service;
-    public LoginController(ApiGateWay.Service.ILoginService service)
+    private readonly LoginServiceApi.Service.ILoginService _service;
+    public LoginServiceController(LoginServiceApi.Service.ILoginService service)
     {
         _service = service;
     }
 
-    [HttpGet("Login")]
-    public async Task<IActionResult> Login(string username, string password)
+    [HttpPost("Login")]
+    public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
     {
-        if (String.IsNullOrEmpty(username) && String.IsNullOrEmpty(password))
+        if (!ModelState.IsValid)
         {
             return StatusCode(400,"Empty username or password");
         }
@@ -29,7 +27,7 @@ public class LoginController : Controller
         try
         {
             Console.WriteLine("before service");
-            var result = await _service.Login(username,password);
+            var result = await _service.Login(loginRequest);
             System.Console.WriteLine("after service");
             if(result._status == 200)
             {

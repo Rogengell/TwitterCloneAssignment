@@ -3,55 +3,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiGateWay.Request_Responce;
-using EasyNetQ;
 using EFramework.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Model;
+using Newtonsoft.Json;
 
 namespace ApiGateWay.Service
 {
-    public class LoginService : ILoginService
+    public class LoginService : ApiGateWay.Service.ILoginService
     {
-        private readonly IBus _bus;
-        public LoginService(IBus bus)
-        {
-            _bus = bus;
-        }
+        public LoginService()
+        {}
 
         public async Task<GeneralResponce> Login(string email, string password)
         {
             try
             {
-                Console.WriteLine();
+                HttpClient client = new HttpClient();
+                LoginRequest loginRequest = new LoginRequest(email, password);
 
-                var replyQueue = "Login_queue_" + System.Guid.NewGuid();
-                System.Console.WriteLine(replyQueue);
-                var LoginRequest = new LoginRequest(email, password, replyQueue);
+               string json = JsonConvert.SerializeObject(loginRequest);
+               var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-                var tcs = new TaskCompletionSource<GeneralResponce>();
+               HttpResponseMessage response = await client.PostAsync("http://loginserviceapi:8082/LoginService/Login", content);
 
-                var subscriptionResult = _bus.PubSub.Subscribe<GeneralResponce>(replyQueue, result =>
-                {
-                    tcs.SetResult(result);
-                });
+               string responseBody = await response.Content.ReadAsStringAsync();
+               var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
 
-                await _bus.PubSub.PublishAsync(LoginRequest);
-
-                var generalResponce = await tcs.Task;
-
-                subscriptionResult.Dispose();
-
-                System.Console.WriteLine(generalResponce._status);
-                System.Console.WriteLine(generalResponce._message);
-                System.Console.WriteLine(generalResponce._user);
-
-                if (generalResponce?._status == 200)
+                if (generalResponce._status == 200)
                 {
                     return new GeneralResponce(200, "Success", generalResponce._user); 
                 }
-                return new GeneralResponce(404, "User not found");
+                return new GeneralResponce(404, generalResponce._message);
             }
             catch (System.Exception ex)
             {
@@ -64,26 +49,7 @@ namespace ApiGateWay.Service
         {
             try
             {
-                var replyQueue = "Create_Account_queue_" + System.Guid.NewGuid();
-                createRequest.ReplyTo=replyQueue;
-
-                await _bus.PubSub.PublishAsync(createRequest);
-
-                GeneralResponce generalResponce = null;
-                var subscriptionResult = _bus.PubSub.Subscribe<GeneralResponce>(replyQueue, result =>
-                {
-                    generalResponce = result;
-                });
-
-                int count = 0;
-                while (generalResponce == null && count < 10)
-                {
-                    await Task.Delay(1000);
-                    count++;
-                }
-
-                subscriptionResult.Dispose();
-
+                var generalResponce = new GeneralResponce(200, "Success");
                 if (generalResponce?._status == 200)
                 {
                     return new GeneralResponce(200, "Success"); 
@@ -101,26 +67,8 @@ namespace ApiGateWay.Service
         {
             try
             {
-                var replyQueue = "Update_Account_queue_" + System.Guid.NewGuid();
-                updateRequest.ReplyTo=replyQueue;
-
-                await _bus.PubSub.PublishAsync(updateRequest);
-
-                GeneralResponce generalResponce = null;
-                var subscriptionResult = _bus.PubSub.Subscribe<GeneralResponce>(replyQueue, result =>
-                {
-                    generalResponce = result;
-                });
-
-                int count = 0;
-                while (generalResponce == null && count < 10)
-                {
-                    await Task.Delay(1000);
-                    count++;
-                }
-
-                subscriptionResult.Dispose();
-
+                
+                var generalResponce = new GeneralResponce(200, "Success");
                 if (generalResponce?._status == 200)
                 {
                     return new GeneralResponce(200, "Success"); 
@@ -138,26 +86,7 @@ namespace ApiGateWay.Service
         {
             try
             {
-                var replyQueue = "Delete_Account_queue_" + System.Guid.NewGuid();
-                deleteRequest.ReplyTo=replyQueue;
-
-                await _bus.PubSub.PublishAsync(deleteRequest);
-
-                GeneralResponce generalResponce = null;
-                var subscriptionResult = _bus.PubSub.Subscribe<GeneralResponce>(replyQueue, result =>
-                {
-                    generalResponce = result;
-                });
-
-                int count = 0;
-                while (generalResponce == null && count < 10)
-                {
-                    await Task.Delay(1000);
-                    count++;
-                }
-
-                subscriptionResult.Dispose();
-
+                var generalResponce = new GeneralResponce(200, "Success");
                 if (generalResponce?._status == 200)
                 {
                     return new GeneralResponce(200, "Success", generalResponce._user); 

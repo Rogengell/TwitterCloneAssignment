@@ -6,9 +6,8 @@ namespace ApiGateWay.Service
     public class UserService : IUserService
     {
         private readonly IBus _bus;
-        public UserService(IBus bus)
+        public UserService()
         {
-            _bus = bus;
         }
 
         public async Task<GeneralResponce> GetAllUser()
