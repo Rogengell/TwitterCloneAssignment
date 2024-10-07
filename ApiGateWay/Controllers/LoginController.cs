@@ -21,6 +21,7 @@ public class LoginController : Controller
     [HttpGet("Login")]
     public async Task<IActionResult> Login(string username, string password)
     {
+        System.Console.WriteLine(Path.Combine(Directory.GetCurrentDirectory(), "../EFramework"));
         if (String.IsNullOrEmpty(username) && String.IsNullOrEmpty(password))
         {
             return StatusCode(400,"Empty username or password");

@@ -13,7 +13,7 @@ namespace EFramework.Data
         public AGWDbContext CreateDbContext(string[]? args = null)
         {
             var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
+                .SetBasePath(Directory.GetCurrentDirectory() + "/TwitterCloneAssignment/EFramework")
                 .AddJsonFile("appsettings.json")
                 .Build();
 

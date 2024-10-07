@@ -30,6 +30,7 @@ namespace ApiGateWay.Service
                HttpResponseMessage response = await client.PostAsync("http://loginserviceapi:8082/LoginService/Login", content);
 
                string responseBody = await response.Content.ReadAsStringAsync();
+               System.Console.WriteLine(responseBody);
                var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
 
                 if (generalResponce._status == 200)
@@ -40,8 +41,9 @@ namespace ApiGateWay.Service
             }
             catch (System.Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return new GeneralResponce(400, ex.Message);
+                var message = ex.Message + "\n" + ex.StackTrace + "\n" + ex.InnerException?.Message;
+                Console.WriteLine(message);
+                return new GeneralResponce(400, message);
             }
         }
 
