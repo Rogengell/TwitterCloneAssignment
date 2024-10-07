@@ -1,16 +1,13 @@
-using ApiGateWay;
-using ApiGateWay.Service;
-using EasyNetQ;
-using EasyNetQ.Internals;
-
+using EFramework;
+using EFramework.Data;
+using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddScoped<ILoginService, LoginService>();
-builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<LoginServiceApi.Service.ILoginService, LoginServiceApi.Service.LoginService>();
 
 var app = builder.Build();
 
@@ -21,8 +18,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.MapControllers();
 //app.UseHttpsRedirection();
 
-app.MapControllers();
-
 app.Run();
+

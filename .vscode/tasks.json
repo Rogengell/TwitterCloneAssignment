@@ -46,12 +46,12 @@
             "dockerBuild": {
                 "tag": "twittercloneassignment:dev",
                 "target": "base",
-                "dockerfile": "${workspaceFolder}/LoginService/Dockerfile",
+                "dockerfile": "${workspaceFolder}/UserServiceApi/Dockerfile",
                 "context": "${workspaceFolder}",
                 "pull": true
             },
             "netCore": {
-                "appProject": "${workspaceFolder}/LoginService/LoginService.csproj"
+                "appProject": "${workspaceFolder}/UserServiceApi/UserServiceApi.csproj"
             }
         },
         {
@@ -62,7 +62,7 @@
             ],
             "dockerBuild": {
                 "tag": "twittercloneassignment:latest",
-                "dockerfile": "${workspaceFolder}/LoginService/Dockerfile",
+                "dockerfile": "${workspaceFolder}/UserServiceApi/Dockerfile",
                 "context": "${workspaceFolder}",
                 "platform": {
                     "os": "linux",
@@ -71,7 +71,7 @@
                 "pull": true
             },
             "netCore": {
-                "appProject": "${workspaceFolder}/LoginService/LoginService.csproj"
+                "appProject": "${workspaceFolder}/UserServiceApi/UserServiceApi.csproj"
             }
         },
         {
@@ -82,7 +82,7 @@
             ],
             "dockerRun": {},
             "netCore": {
-                "appProject": "${workspaceFolder}/LoginService/LoginService.csproj",
+                "appProject": "${workspaceFolder}/UserServiceApi/UserServiceApi.csproj",
                 "enableDebugging": true
             }
         },
@@ -94,7 +94,7 @@
             ],
             "dockerRun": {},
             "netCore": {
-                "appProject": "${workspaceFolder}/LoginService/LoginService.csproj"
+                "appProject": "${workspaceFolder}/UserServiceApi/UserServiceApi.csproj"
             }
         }
     ]

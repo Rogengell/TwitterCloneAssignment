@@ -35,10 +35,10 @@ services:
 #      user-db:
 #        condition: service_healthy
   
-  loginservice:
+  loginserviceapi:
     build:
       context: .
-      dockerfile: loginservice/Dockerfile
+      dockerfile: LoginServiceApi/Dockerfile
     depends_on:
       user-db:
         condition: service_healthy

@@ -1,9 +1,9 @@
 using ApiGateWay.Request_Responce;
 
-namespace ApiGateWay.Service;
+namespace LoginServiceApi.Service;
 public interface ILoginService
 {
-    Task<GeneralResponce> Login(string email, string password);
+    Task<GeneralResponce> Login(LoginRequest loginRequest);
     Task<GeneralResponce> CreateAccount(CreateRequest createRequest);
     Task<GeneralResponce> UpdateAccount(UpdateRequest updateRequest);
     Task<GeneralResponce> DeleteAccount(DeleteRequest deleteRequest);
