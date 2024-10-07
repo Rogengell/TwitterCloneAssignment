@@ -10,6 +10,14 @@ namespace ApiGateWay.Request_Responce
         public string? replyTo { get; set; }
 
 
+        public UserRequest()
+        {
+        }
+
+        public UserRequest(string username){
+            this.UserName = username;
+        }
+
         public UserRequest(string status, string username, string replyTo)
         {
             this.status = status;
