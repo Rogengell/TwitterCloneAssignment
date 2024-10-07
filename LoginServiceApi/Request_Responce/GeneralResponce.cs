@@ -12,8 +12,6 @@ namespace ApiGateWay.Request_Responce
         public int _status { get; set; }
         public string _message { get; set; }
         public UsersTable? _user { get; set; }
-        [Required]
-        public string? ReplyTo { get; set; }
         public List<UsersTable>? _users { get; set; }
 
 
