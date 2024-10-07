@@ -21,17 +21,21 @@ namespace UserServiceApi.Service
 
                 var users = await _context.usersTables.ToListAsync();
 
-                if (users != null)
+                if (users == null)
                 {
-                    return new GeneralResponce(200, "Success", users);
+                    var searchResult = new GeneralResponce(404, "no user found");
+                    return searchResult;
+                }else
+                { 
+                    var searchResult = new GeneralResponce(200, "Success", users);
+                    return searchResult;
                 }
 
-                return new GeneralResponce(404, "no user found");
             }
             catch (System.Exception ex)
             {
-                return new GeneralResponce(400, ex.Message);
-                throw;
+                var searchResult = new GeneralResponce(400, ex.Message);
+                return searchResult;
             }
         }
 
@@ -45,42 +49,49 @@ namespace UserServiceApi.Service
                 var users = await _context.usersTables
                     .Where(u => u.UserName == searchRequest.UserName).ToListAsync();
 
-                if (users != null)
+                if (users == null)
                 {
-                    return new GeneralResponce(200, "Success", users);
+                    var searchResult = new GeneralResponce(404, "no user found with the username: " + searchRequest);
+                    return searchResult;
+                }else
+                {
+                    var searchResult = new GeneralResponce(200, "Success", users);
+                    return searchResult;
                 }
 
-                return new GeneralResponce(404, "no user found with the username: " + searchRequest);
             }
             catch (System.Exception ex)
             {
-                return new GeneralResponce(400, ex.Message);
-                throw;
+                var searchResult = new GeneralResponce(400, ex.Message);
+                return searchResult;
             }
         }
 
         public async Task<GeneralResponce> GetUserByTag(UserRequest searchRequest)
         {
-            // try
-            // {
-            //     Console.WriteLine("Getting users by username");
+            try
+            {
+                Console.WriteLine("Getting users by username");
 
-            //     var users = await _context.usersTables
-            //         .Where(u => u.Gender == searchRequest.Gender).ToListAsync();
+                var users = await _context.usersTables
+                    .Where(u => u.Gender == searchRequest.UserName).ToListAsync();
 
-            //     if (users != null)
-            //     {
-            //         return new GeneralResponce(200, "Success", users);
-            //     }
+                if (users == null)
+                {
+                    var searchResult = new GeneralResponce(404, "no user found with this tag: " + searchRequest);
+                    return searchResult;
+                }else
+                {
+                    var searchResult = new GeneralResponce(200, "Success", users);
+                    return searchResult;
+                }
 
-            //     return new GeneralResponce(404, "no user found with the username: " + searchRequest);
-            // }
-            // catch (System.Exception ex)
-            // {
-            //     return new GeneralResponce(400, ex.Message);
-            //     throw;
-            // }
-            return null;
+            }
+            catch (System.Exception ex)
+            {
+                var searchResult = new GeneralResponce(400, ex.Message);
+                return searchResult;
+            }
         }
     }
 }
