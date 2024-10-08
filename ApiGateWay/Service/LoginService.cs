@@ -30,7 +30,7 @@ namespace ApiGateWay.Service
                HttpResponseMessage response = await client.PostAsync("http://loginserviceapi:8082/LoginService/Login", content);
 
                string responseBody = await response.Content.ReadAsStringAsync();
-               System.Console.WriteLine(responseBody);
+
                var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
 
                 if (generalResponce._status == 200)
@@ -51,7 +51,15 @@ namespace ApiGateWay.Service
         {
             try
             {
-                var generalResponce = new GeneralResponce(200, "Success");
+                HttpClient client = new HttpClient();
+                string json = JsonConvert.SerializeObject(createRequest);
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await client.PostAsync("http://loginserviceapi:8082/LoginService/Create", content);
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
                 if (generalResponce?._status == 200)
                 {
                     return new GeneralResponce(200, "Success"); 
@@ -69,8 +77,15 @@ namespace ApiGateWay.Service
         {
             try
             {
-                
-                var generalResponce = new GeneralResponce(200, "Success");
+                HttpClient client = new HttpClient();
+                string json = JsonConvert.SerializeObject(updateRequest);
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await client.PostAsync("http://loginserviceapi:8082/LoginService/Update", content);
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
                 if (generalResponce?._status == 200)
                 {
                     return new GeneralResponce(200, "Success"); 
@@ -88,7 +103,15 @@ namespace ApiGateWay.Service
         {
             try
             {
-                var generalResponce = new GeneralResponce(200, "Success");
+                HttpClient client = new HttpClient();
+                string json = JsonConvert.SerializeObject(deleteRequest);
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await client.PostAsync("http://loginserviceapi:8082/LoginService/Delete", content);
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
                 if (generalResponce?._status == 200)
                 {
                     return new GeneralResponce(200, "Success", generalResponce._user); 
