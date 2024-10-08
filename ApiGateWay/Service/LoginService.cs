@@ -31,6 +31,8 @@ namespace ApiGateWay.Service
 
                 string responseBody = await response.Content.ReadAsStringAsync();
 
+                System.Console.WriteLine(responseBody);
+
                 var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
 
                 if (generalResponce == null)
@@ -56,9 +58,12 @@ namespace ApiGateWay.Service
                 string json = JsonConvert.SerializeObject(createRequest);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = await client.PostAsync("http://loginserviceapi:8082/LoginService/Create", content);
+                HttpResponseMessage response = await client.PutAsync("http://loginserviceapi:8082/LoginService/Create", content);
 
                 string responseBody = await response.Content.ReadAsStringAsync();
+
+                System.Console.WriteLine(response.StatusCode);
+                System.Console.WriteLine(responseBody);
 
                 var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
 

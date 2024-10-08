@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Model;
 
-namespace ApiGateWay.Request_Responce
+namespace LoginServiceApi.Request_Responce
 {
     public class GeneralResponce
     {

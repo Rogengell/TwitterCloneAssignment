@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ApiGateWay.Request_Responce;
 using EFramework.Data;
+using LoginServiceApi.Request_Responce;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -27,7 +27,7 @@ public class LoginServiceController : Controller
         try
         {
             Console.WriteLine("before service");
-            var result = await _service.Login(loginRequest);
+            GeneralResponce result = await _service.Login(loginRequest);
             System.Console.WriteLine("after service");
             if(result._status == 200)
             {
@@ -56,7 +56,7 @@ public class LoginServiceController : Controller
         }
         try
         {
-            var result = await _service.CreateAccount(request);
+            GeneralResponce result = await _service.CreateAccount(request);
             if(result._status == 200)
             {
                 return result;
@@ -82,7 +82,7 @@ public class LoginServiceController : Controller
         }
         try
         {
-            var result = await _service.UpdateAccount(updateRequest);
+            GeneralResponce result = await _service.UpdateAccount(updateRequest);
             if(result._status == 200)
             {
                 return result;
@@ -99,7 +99,7 @@ public class LoginServiceController : Controller
         }
     }
 
-    [HttpDelete("Delete")]
+    [HttpPost("Delete")]
     public async Task<GeneralResponce> DeleteAccount([FromBody] DeleteRequest request)
     {
         if (!ModelState.IsValid)
@@ -108,7 +108,7 @@ public class LoginServiceController : Controller
         }
         try
         {
-            var result = await _service.DeleteAccount(request);
+            GeneralResponce result = await _service.DeleteAccount(request);
             if(result._status == 200)
             {
                 return result;

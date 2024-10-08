@@ -1,4 +1,4 @@
-using ApiGateWay.Request_Responce;
+using LoginServiceApi.Request_Responce;
 
 namespace LoginServiceApi.Service;
 public interface ILoginService
