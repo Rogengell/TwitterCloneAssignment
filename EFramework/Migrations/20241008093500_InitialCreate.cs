@@ -14,10 +14,10 @@ namespace EFramework.Migrations
                 name: "usersTables",
                 columns: table => new
                 {
-                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -27,7 +27,7 @@ namespace EFramework.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_usersTables", x => x.Email);
+                    table.PrimaryKey("PK_usersTables", x => x.Id);
                 });
         }
 

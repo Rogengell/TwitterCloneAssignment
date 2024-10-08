@@ -2,6 +2,7 @@ using EFramework;
 using EFramework.Data;
 using Microsoft.EntityFrameworkCore;
 using UserServiceApi.Service;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;

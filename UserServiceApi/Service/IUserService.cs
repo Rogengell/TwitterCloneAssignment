@@ -1,10 +1,12 @@
-using ApiGateWay.Request_Responce;
+
+
+using UserServiceApi.Request_Responce;
 
 namespace UserServiceApi.Service;
 
 public interface IUserService
 {
-    Task<GeneralResponce> GetAllUser();
-    Task<GeneralResponce> GetUser(UserRequest searchRequest);
-    Task<GeneralResponce> GetUserByTag(UserRequest searchRequest);
+    Task<GeneralResponse> GetAllUser();
+    Task<GeneralResponse> GetUser(UserRequest searchRequest);
+    Task<GeneralResponse> GetUserByTag(UserRequest searchRequest);
 }

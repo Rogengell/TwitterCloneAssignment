@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UserServiceApi.Service;
 using Microsoft.AspNetCore.Mvc;
-using ApiGateWay.Request_Responce;
+using UserServiceApi.Request_Responce;
 
 namespace UserServiceApi.Controllers
 {
@@ -19,76 +19,76 @@ namespace UserServiceApi.Controllers
             _service = service;
         }
         [HttpGet("GetAllUser")]
-        public async Task<GeneralResponce> GetAllUser()
+        public async Task<GeneralResponse> GetAllUser()
         {
             try
             {
                 var result = await _service.GetAllUser();
                 if (result._status == 200)
                 {
-                    return new GeneralResponce(200, result._message, result._users);
+                    return new GeneralResponse(200, result._message, result._users);
                 }
                 else
                 {
-                    return new GeneralResponce(404, "there is no user in database");
+                    return new GeneralResponse(404, "there is no user in database");
                 }
             }
             catch (System.Exception ex)
             {
                 Console.WriteLine("Something went wrong GetAllUser" + ex.Message);
-                return new GeneralResponce(400, ex.Message);
+                return new GeneralResponse(400, ex.Message);
             }
         }
 
         [HttpPost("GetUser")]
-        public async Task<GeneralResponce> GetUser([FromBody] UserRequest searchRequest)
+        public async Task<GeneralResponse> GetUser([FromBody] UserRequest searchRequest)
         {
             if (!ModelState.IsValid)
             {
-                return new GeneralResponce(400, "Invalid data");
+                return new GeneralResponse(400, "Invalid data");
             }
             try
             {
                 var result = await _service.GetUser(searchRequest);
                 if (result._status == 200)
                 {
-                    return new GeneralResponce(200, result._message, result._users);
+                    return new GeneralResponse(200, result._message, result._users);
                 }
                 else
                 {
-                    return new GeneralResponce(result._status, result._message);
+                    return new GeneralResponse(result._status, result._message);
                 }
             }
             catch (System.Exception ex)
             {
                 Console.WriteLine("Something went wrong GetUser" + ex.Message);
-                return new GeneralResponce(400, ex.Message);
+                return new GeneralResponse(400, ex.Message);
             }
         }
 
         [HttpPost("GetUserByTag")]
-        public async Task<GeneralResponce> GetUserByTag([FromBody] UserRequest searchRequest)
+        public async Task<GeneralResponse> GetUserByTag([FromBody] UserRequest searchRequest)
         {
             if (!ModelState.IsValid)
             {
-                return new GeneralResponce(400, "Invalid data");
+                return new GeneralResponse(400, "Invalid data");
             }
             try
             {
                 var result = await _service.GetUserByTag(searchRequest);
                 if (result._status == 200)
                 {
-                    return new GeneralResponce(200, result._message, result._users);
+                    return new GeneralResponse(200, result._message, result._users);
                 }
                 else
                 {
-                    return new GeneralResponce(result._status, result._message);
+                    return new GeneralResponse(result._status, result._message);
                 }
             }
             catch (System.Exception ex)
             {
                 Console.WriteLine("Something went wrong GetUserByTag" + ex.Message);
-                return new GeneralResponce(400, ex.Message);
+                return new GeneralResponse(400, ex.Message);
             }
         }
     }
