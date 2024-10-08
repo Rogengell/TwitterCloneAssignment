@@ -23,9 +23,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - 8080:8080
-    depends_on:
-      migration_service:
-        condition: service_completed_successfully
+  #  depends_on:
+   #   migration_service:
+    #    condition: service_completed_successfully
 
   userserviceapi:
     build:

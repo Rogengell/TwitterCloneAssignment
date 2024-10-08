@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ApiGateWay.Request_Responce;
 using EasyNetQ;
 using EFramework.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Model;
+using LoginServiceApi.Request_Responce;
 
 namespace LoginServiceApi.Service
 {

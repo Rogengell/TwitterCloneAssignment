@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ApiGateWay.Request_Responce
+namespace LoginServiceApi.Request_Responce
 {
     public class UserRequest
     {

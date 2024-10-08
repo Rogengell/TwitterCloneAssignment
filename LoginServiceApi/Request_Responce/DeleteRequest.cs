@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ApiGateWay.Request_Responce
+namespace LoginServiceApi.Request_Responce
 {
     public class DeleteRequest
     {
