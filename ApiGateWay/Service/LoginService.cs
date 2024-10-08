@@ -15,7 +15,7 @@ namespace ApiGateWay.Service
     public class LoginService : ApiGateWay.Service.ILoginService
     {
         public LoginService()
-        {}
+        { }
 
         public async Task<GeneralResponce> Login(string email, string password)
         {
@@ -24,20 +24,21 @@ namespace ApiGateWay.Service
                 HttpClient client = new HttpClient();
                 LoginRequest loginRequest = new LoginRequest(email, password);
 
-               string json = JsonConvert.SerializeObject(loginRequest);
-               var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                string json = JsonConvert.SerializeObject(loginRequest);
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-               HttpResponseMessage response = await client.PostAsync("http://loginserviceapi:8082/LoginService/Login", content);
+                HttpResponseMessage response = await client.PostAsync("http://loginserviceapi:8082/LoginService/Login", content);
 
-               string responseBody = await response.Content.ReadAsStringAsync();
+                string responseBody = await response.Content.ReadAsStringAsync();
 
-               var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
+                var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
 
-                if (generalResponce._status == 200)
+                if (generalResponce == null)
                 {
-                    return new GeneralResponce(200, "Success", generalResponce._user); 
+                    return new GeneralResponce(400, "connection failed");
                 }
-                return new GeneralResponce(404, generalResponce._message);
+
+                return generalResponce;
             }
             catch (System.Exception ex)
             {
@@ -60,11 +61,13 @@ namespace ApiGateWay.Service
                 string responseBody = await response.Content.ReadAsStringAsync();
 
                 var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
-                if (generalResponce?._status == 200)
+
+                if (generalResponce == null)
                 {
-                    return new GeneralResponce(200, "Success"); 
+                    return new GeneralResponce(400, "connection failed");
                 }
-                return new GeneralResponce(404, "Create Failed");
+
+                return generalResponce;
             }
             catch (System.Exception ex)
             {
@@ -86,11 +89,13 @@ namespace ApiGateWay.Service
                 string responseBody = await response.Content.ReadAsStringAsync();
 
                 var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
-                if (generalResponce?._status == 200)
+
+                if (generalResponce == null)
                 {
-                    return new GeneralResponce(200, "Success"); 
+                    return new GeneralResponce(400, "connection failed");
                 }
-                return new GeneralResponce(404, "Account Update Failed");
+
+                return generalResponce;
             }
             catch (System.Exception ex)
             {
@@ -112,11 +117,13 @@ namespace ApiGateWay.Service
                 string responseBody = await response.Content.ReadAsStringAsync();
 
                 var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
-                if (generalResponce?._status == 200)
+
+                if (generalResponce == null)
                 {
-                    return new GeneralResponce(200, "Success", generalResponce._user); 
+                    return new GeneralResponce(400, "connection failed");
                 }
-                return new GeneralResponce(404, "Delete Account Failed");
+
+                return generalResponce;
             }
             catch (System.Exception ex)
             {

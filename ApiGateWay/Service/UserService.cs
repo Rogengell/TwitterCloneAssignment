@@ -15,25 +15,25 @@ namespace ApiGateWay.Service
             try
             {
                 Console.WriteLine("Getting all users");
-                
+
                 HttpClient client = new HttpClient();
                 UserRequest userRequest = new UserRequest();
-                
+
                 string json = JsonConvert.SerializeObject(userRequest);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-                
+
                 HttpResponseMessage response = await client.PostAsync("http://userserviceapi:8081/UserServiceApi/GetAllUser", content);
 
                 string responseBody = await response.Content.ReadAsStringAsync();
 
                 var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
 
-                if (generalResponce._status == 200)
+                if (generalResponce == null)
                 {
-                    return new GeneralResponce(200, "Success", generalResponce._users);
+                    return new GeneralResponce(400, "connection failed");
                 }
 
-                return new GeneralResponce(404, generalResponce._message);
+                return generalResponce;
             }
             catch (System.Exception ex)
             {
@@ -47,25 +47,25 @@ namespace ApiGateWay.Service
             try
             {
                 Console.WriteLine("Getting all users");
-                
+
                 HttpClient client = new HttpClient();
                 UserRequest userRequest = new UserRequest(searchRequest);
-                
+
                 string json = JsonConvert.SerializeObject(userRequest);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-                
+
                 HttpResponseMessage response = await client.PostAsync("http://userserviceapi:8081/UserServiceApi/GetUser", content);
 
                 string responseBody = await response.Content.ReadAsStringAsync();
 
                 var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
 
-                if (generalResponce._status == 200)
+                if (generalResponce == null)
                 {
-                    return new GeneralResponce(200, "Success", generalResponce._users);
+                    return new GeneralResponce(400, "connection failed");
                 }
 
-                return new GeneralResponce(404, generalResponce._message);
+                return generalResponce;
             }
             catch (System.Exception ex)
             {
@@ -78,25 +78,25 @@ namespace ApiGateWay.Service
             try
             {
                 Console.WriteLine("Getting all users");
-                
+
                 HttpClient client = new HttpClient();
                 UserRequest userRequest = new UserRequest(searchRequest);
-                
+
                 string json = JsonConvert.SerializeObject(userRequest);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-                
+
                 HttpResponseMessage response = await client.PostAsync("http://userserviceapi:8081/UserServiceApi/GetUserByTag", content);
 
                 string responseBody = await response.Content.ReadAsStringAsync();
 
                 var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
 
-                if (generalResponce._status == 200)
+                if (generalResponce == null)
                 {
-                    return new GeneralResponce(200, "Success", generalResponce._users);
+                    return new GeneralResponce(400, "connection failed");
                 }
 
-                return new GeneralResponce(404, generalResponce._message);
+                return generalResponce;
             }
             catch (System.Exception ex)
             {

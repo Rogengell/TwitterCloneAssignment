@@ -1,6 +1,7 @@
-using ApiGateWay.Request_Responce;
+
 using EFramework.Data;
 using Microsoft.EntityFrameworkCore;
+using UserServiceApi.Request_Responce;
 
 namespace UserServiceApi.Service
 {
@@ -12,7 +13,7 @@ namespace UserServiceApi.Service
             _context = context;
         }
 
-        public async Task<GeneralResponce> GetAllUser()
+        public async Task<GeneralResponse> GetAllUser()
         {
             try
             {
@@ -23,24 +24,27 @@ namespace UserServiceApi.Service
 
                 if (users == null)
                 {
-                    var searchResult = new GeneralResponce(404, "no user found");
+                    var searchResult = new GeneralResponse(404, "no user found");
                     return searchResult;
-                }else
-                { 
-                    var searchResult = new GeneralResponce(200, "Success", users);
+                }
+                else
+                {
+
+                    var searchResult = new GeneralResponse(200, "Success", users);
                     return searchResult;
                 }
 
             }
             catch (System.Exception ex)
             {
-                var searchResult = new GeneralResponce(400, ex.Message);
+                var message = ex.Message + "\n" + ex.StackTrace + "\n" + ex.InnerException?.Message;
+                var searchResult = new GeneralResponse(400, ex.Message);
                 return searchResult;
             }
         }
 
 
-        public async Task<GeneralResponce> GetUser(UserRequest searchRequest)
+        public async Task<GeneralResponse> GetUser(UserRequest searchRequest)
         {
             try
             {
@@ -51,23 +55,24 @@ namespace UserServiceApi.Service
 
                 if (users == null)
                 {
-                    var searchResult = new GeneralResponce(404, "no user found with the username: " + searchRequest);
+                    var searchResult = new GeneralResponse(404, "no user found with the username: " + searchRequest);
                     return searchResult;
-                }else
+                }
+                else
                 {
-                    var searchResult = new GeneralResponce(200, "Success", users);
+                    var searchResult = new GeneralResponse(200, "Success", users);
                     return searchResult;
                 }
 
             }
             catch (System.Exception ex)
             {
-                var searchResult = new GeneralResponce(400, ex.Message);
+                var searchResult = new GeneralResponse(400, ex.Message);
                 return searchResult;
             }
         }
 
-        public async Task<GeneralResponce> GetUserByTag(UserRequest searchRequest)
+        public async Task<GeneralResponse> GetUserByTag(UserRequest searchRequest)
         {
             try
             {
@@ -78,18 +83,19 @@ namespace UserServiceApi.Service
 
                 if (users == null)
                 {
-                    var searchResult = new GeneralResponce(404, "no user found with this tag: " + searchRequest);
+                    var searchResult = new GeneralResponse(404, "no user found with this tag: " + searchRequest);
                     return searchResult;
-                }else
+                }
+                else
                 {
-                    var searchResult = new GeneralResponce(200, "Success", users);
+                    var searchResult = new GeneralResponse(200, "Success", users);
                     return searchResult;
                 }
 
             }
             catch (System.Exception ex)
             {
-                var searchResult = new GeneralResponce(400, ex.Message);
+                var searchResult = new GeneralResponse(400, ex.Message);
                 return searchResult;
             }
         }
