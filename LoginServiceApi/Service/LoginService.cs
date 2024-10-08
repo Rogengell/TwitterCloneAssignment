@@ -105,7 +105,7 @@ namespace LoginServiceApi.Service
             {
                 _context.usersTables?.Remove(new UsersTable
                 {
-                    Id = (int)deleteRequest.Id,
+                    Id = deleteRequest.Id.Value,
                     Email = deleteRequest.email,
                     Password = deleteRequest.password
                 });

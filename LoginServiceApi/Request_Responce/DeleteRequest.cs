@@ -18,11 +18,12 @@ namespace LoginServiceApi.Request_Responce
         [Range(1, int.MaxValue)]
         public int? Id { get; set; }
 
-        public DeleteRequest(string email, string password, int Id)
+        public DeleteRequest(string email, string password, int id)
         {
             this.email = email;
             this.password = password;
-            this.Id = Id;
+            this.Id = id;
         }
+        public DeleteRequest() { }
     }
 }
