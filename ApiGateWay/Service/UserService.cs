@@ -22,7 +22,7 @@ namespace ApiGateWay.Service
                 string json = JsonConvert.SerializeObject(userRequest);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = await client.PostAsync("http://userserviceapi:8081/UserServiceApi/GetAllUser", content);
+                HttpResponseMessage response = await client.GetAsync("http://userserviceapi:8081/UserService/GetAllUser");
 
                 string responseBody = await response.Content.ReadAsStringAsync();
 
@@ -53,13 +53,14 @@ namespace ApiGateWay.Service
 
                 string json = JsonConvert.SerializeObject(userRequest);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-
-                HttpResponseMessage response = await client.PostAsync("http://userserviceapi:8081/UserServiceApi/GetUser", content);
+                System.Console.WriteLine("sending request");
+                HttpResponseMessage response = await client.PostAsync("http://userserviceapi:8081/UserService/GetUser", content);
 
                 string responseBody = await response.Content.ReadAsStringAsync();
 
                 var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
-
+                System.Console.WriteLine("got response");
+                System.Console.WriteLine(generalResponce._users);
                 if (generalResponce == null)
                 {
                     return new GeneralResponce(400, "connection failed");
@@ -85,7 +86,7 @@ namespace ApiGateWay.Service
                 string json = JsonConvert.SerializeObject(userRequest);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = await client.PostAsync("http://userserviceapi:8081/UserServiceApi/GetUserByTag", content);
+                HttpResponseMessage response = await client.PostAsync("http://userserviceapi:8081/UserService/GetUserByTag", content);
 
                 string responseBody = await response.Content.ReadAsStringAsync();
 

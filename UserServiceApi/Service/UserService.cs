@@ -55,7 +55,7 @@ namespace UserServiceApi.Service
 
                 if (users == null)
                 {
-                    var searchResult = new GeneralResponse(404, "no user found with the username: " + searchRequest);
+                    var searchResult = new GeneralResponse(404, "no user found with the username: " + searchRequest.UserName);
                     return searchResult;
                 }
                 else
@@ -83,7 +83,7 @@ namespace UserServiceApi.Service
 
                 if (users == null)
                 {
-                    var searchResult = new GeneralResponse(404, "no user found with this tag: " + searchRequest);
+                    var searchResult = new GeneralResponse(404, "no user found with this tag: " + searchRequest.UserName);
                     return searchResult;
                 }
                 else
