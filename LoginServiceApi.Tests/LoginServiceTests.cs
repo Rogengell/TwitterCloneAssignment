@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Model;
 using Moq;
+using Moq.EntityFrameworkCore;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using WireMock.Server;
@@ -111,6 +112,39 @@ public class UnitTest1
 
         // Act
         var result = await loginController.DeleteAccount(new DeleteRequest("test", "test",1));
+
+        // Assert 
+        _testOutputHelper.WriteLine(result._status.ToString());
+        _testOutputHelper.WriteLine(result._message);
+        Assert.Equal(200, result._status);
+        Assert.Equal("Success", result._message);
+    }
+
+    [Fact]
+    public async void TestDB()
+    {
+        // Arrange
+        var mock = new Mock<AGWDbContext>();
+
+        var user = new List<UsersTable>{
+            new UsersTable{
+                Id = 1,
+                Email = "test",
+                Password = "test",
+                UserName = "test",
+                Mobile = "test",
+                Address = "test",
+                FirstName = "test",
+                LastName = "test",
+                Gender = "test"
+            }};
+
+        mock.Setup(m => m.usersTables).ReturnsDbSet(user);
+
+        var loginController = new LoginService(mock.Object);
+
+        // Act
+        var result = await loginController.Login(new LoginRequest("test", "test"));
 
         // Assert 
         _testOutputHelper.WriteLine(result._status.ToString());
