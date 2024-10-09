@@ -5,6 +5,8 @@ using UserServiceApi.Request_Responce;
 using Xunit.Abstractions;
 using Model;
 using UserServiceApi.Controllers;
+using EFramework.Data;
+using Moq.EntityFrameworkCore;
 
 namespace UserServiceApi.Tests;
 
@@ -27,8 +29,9 @@ public class UnitTest1
 
         return userList;
     }
+
     [Fact]
-    public async void EnpointTestGetAllUsers()
+    public async void EndpointTestGetAllUsers()
     {
         // Arrange
         var mock = new Mock<IUserService>();
@@ -51,7 +54,7 @@ public class UnitTest1
     }
 
     [Fact]
-    public async void EnpointTestGetUser()
+    public async void EndpointTestGetUser()
     {
         // Arrange
         var mock = new Mock<IUserService>();
@@ -73,7 +76,7 @@ public class UnitTest1
     }
 
     [Fact]
-    public async void EnpointTestGetUserByTag()
+    public async void EndpointTestGetUserByTag()
     {
         // Arrange
         var mock = new Mock<IUserService>();
@@ -90,6 +93,67 @@ public class UnitTest1
         var result = await userController.GetUserByTag(new UserRequest("female"));
         // Assert
         Assert.Equal("female", result._users?[1].Gender);
+        Assert.Equal(200, result._status);
+        Assert.Equal("Success", result._message);
+    }
+
+    [Fact]
+    public async void TestDatabaseGetAAUser()
+    {
+        // Arrange
+        var mock = new Mock<AGWDbContext>();
+
+        var userList = await InitialSetup();
+
+        mock.Setup(m => m.usersTables).ReturnsDbSet(userList);
+
+        var userController = new UserService(mock.Object);
+
+        // Act
+        var result = await userController.GetAllUser();
+        // Assert
+        Assert.Equal(2, result._users?.Count);
+        Assert.Equal(200, result._status);
+        Assert.Equal("Success", result._message);
+    }
+
+    [Fact]
+    public async void TestDatabaseGetUser()
+    {
+        // Arrange
+        var mock = new Mock<AGWDbContext>();
+
+        var userList = await InitialSetup();
+
+        mock.Setup(m => m.usersTables).ReturnsDbSet(userList);
+
+        var userController = new UserService(mock.Object);
+
+        // Act
+        var result = await userController.GetUser(new UserRequest("user1"));
+        // Assert
+        Assert.Equal("user1", result._users?[0].UserName);
+        Assert.Equal(200, result._status);
+        Assert.Equal("Success", result._message);
+    }
+
+    [Fact]
+    public async void TestDatabaseGetUserByTag()
+    {
+        // Arrange
+        var mock = new Mock<AGWDbContext>();
+
+        var userList = await InitialSetup();
+
+        mock.Setup(m => m.usersTables).ReturnsDbSet(userList);
+
+        var userController = new UserService(mock.Object);
+
+        // Act
+        var result = await userController.GetUserByTag(new UserRequest("female"));
+        _testOutputHelper.WriteLine(result._users?[0].Gender);
+        // Assert
+        Assert.Equal("female", result._users?[0].Gender);
         Assert.Equal(200, result._status);
         Assert.Equal("Success", result._message);
     }
