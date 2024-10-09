@@ -121,7 +121,7 @@ public class UnitTest1
     }
 
     [Fact]
-    public async void TestDB()
+    public async void TestLoginServiceLogin()
     {
         // Arrange
         var mock = new Mock<AGWDbContext>();
@@ -145,6 +145,67 @@ public class UnitTest1
 
         // Act
         var result = await loginController.Login(new LoginRequest("test", "test"));
+
+        // Assert 
+        _testOutputHelper.WriteLine(result._status.ToString());
+        _testOutputHelper.WriteLine(result._message);
+        Assert.Equal(200, result._status);
+        Assert.Equal("Success", result._message);
+    }
+    [Fact]
+    public async void TestLoginServiceCreate()
+    {
+        // Arrange
+        var mock = new Mock<AGWDbContext>();
+
+        var loginController = new LoginService(mock.Object);
+
+        // Act
+        var result = await loginController.CreateAccount(new CreateRequest("test", "test"));
+
+        // Assert 
+        _testOutputHelper.WriteLine(result._status.ToString());
+        _testOutputHelper.WriteLine(result._message);
+        Assert.Equal(200, result._status);
+        Assert.Equal("Success", result._message);
+    }
+    [Fact]
+    public async void TestLoginServiceUpdate()
+    {
+        // Arrange
+        var mock = new Mock<AGWDbContext>();
+
+        var loginController = new LoginService(mock.Object);
+
+        // Act
+        var result = await loginController.UpdateAccount(new UpdateRequest{
+            Id = 1, 
+            Email = "test", 
+            Password = "test", 
+            UserName = "test2", 
+            Mobile = "test2", 
+            Address = "test2", 
+            FirstName = "test2", 
+            LastName = "test2", 
+            Gender = "test2"
+        });
+
+        // Assert 
+        _testOutputHelper.WriteLine(result._status.ToString());
+        _testOutputHelper.WriteLine(result._message);
+        Assert.Equal(200, result._status);
+        Assert.Equal("Success", result._message);
+    }
+    [Fact]
+    public async void TestLoginServiceDelete()
+    {
+        // Arrange
+        var mock = new Mock<AGWDbContext>();
+
+        var loginController = new LoginService(mock.Object);
+
+        // Act
+        var result = await loginController.DeleteAccount(new DeleteRequest("test", "test",1));
 
         // Assert 
         _testOutputHelper.WriteLine(result._status.ToString());
