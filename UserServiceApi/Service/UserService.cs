@@ -8,6 +8,11 @@ namespace UserServiceApi.Service
     public class UserService : IUserService
     {
         private readonly AGWDbContext _context;
+
+        public UserService()
+        {
+
+        }
         public UserService(AGWDbContext context)
         {
             _context = context;
