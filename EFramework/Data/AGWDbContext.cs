@@ -10,8 +10,9 @@ namespace EFramework.Data
     public class AGWDbContext : DbContext
     {
         public AGWDbContext(DbContextOptions<AGWDbContext> options) : base(options) { }
+        public AGWDbContext() { }
 
-        public DbSet<UsersTable>? usersTables { get; set; }
+        public virtual DbSet<UsersTable>? usersTables { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
