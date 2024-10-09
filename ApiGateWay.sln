@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginServiceApi", "LoginSer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserServiceApi", "UserServiceApi\UserServiceApi.csproj", "{EDD64D6B-6F75-449A-B413-6CB5AADF4B3B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginServiceApi.Tests", "LoginServiceApi.Tests\LoginServiceApi.Tests.csproj", "{F74F3D76-485C-472F-B160-C2CE7A51F1FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,5 +54,13 @@ Global
 		{EDD64D6B-6F75-449A-B413-6CB5AADF4B3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDD64D6B-6F75-449A-B413-6CB5AADF4B3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDD64D6B-6F75-449A-B413-6CB5AADF4B3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32AB781F-3413-418B-B948-A52C83E6FADE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32AB781F-3413-418B-B948-A52C83E6FADE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32AB781F-3413-418B-B948-A52C83E6FADE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32AB781F-3413-418B-B948-A52C83E6FADE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F74F3D76-485C-472F-B160-C2CE7A51F1FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F74F3D76-485C-472F-B160-C2CE7A51F1FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F74F3D76-485C-472F-B160-C2CE7A51F1FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F74F3D76-485C-472F-B160-C2CE7A51F1FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
