@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserServiceApi", "UserServi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginServiceApi.Tests", "LoginServiceApi.Tests\LoginServiceApi.Tests.csproj", "{F74F3D76-485C-472F-B160-C2CE7A51F1FB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserServiceApi.Tests", "UserServiceApi.Tests\UserServiceApi.Tests.csproj", "{46034099-77F7-4B7C-ADD2-F7C5FD50C0FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,5 +64,9 @@ Global
 		{F74F3D76-485C-472F-B160-C2CE7A51F1FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F74F3D76-485C-472F-B160-C2CE7A51F1FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F74F3D76-485C-472F-B160-C2CE7A51F1FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46034099-77F7-4B7C-ADD2-F7C5FD50C0FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46034099-77F7-4B7C-ADD2-F7C5FD50C0FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46034099-77F7-4B7C-ADD2-F7C5FD50C0FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46034099-77F7-4B7C-ADD2-F7C5FD50C0FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

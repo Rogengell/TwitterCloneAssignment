@@ -13,6 +13,7 @@ namespace UserServiceApi.Request_Responce
 
         public UserRequest(string username)
         {
+            //TODO: change naming of properties to search or something
             this.UserName = username;
         }
     }
