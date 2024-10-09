@@ -26,10 +26,9 @@ namespace LoginServiceApi.Service
         {
             try
             {
-                System.Console.WriteLine("Before query");
                 var user = await _context.usersTables
                     .Where(u => u.Email == loginRequest.Email && u.Password == loginRequest.Password).FirstOrDefaultAsync();
-                System.Console.WriteLine("After query");
+
                 if (user == null)
                 {
                     var searchResult = new GeneralResponce(404, "User not found");
@@ -53,9 +52,6 @@ namespace LoginServiceApi.Service
         {
             try
             {
-                System.Console.WriteLine("CreateUser");
-                System.Console.WriteLine(createRequest.email);
-                System.Console.WriteLine(createRequest.password);
                 _context.usersTables?.Add(new UsersTable
                 {
                     Email = createRequest.email,
