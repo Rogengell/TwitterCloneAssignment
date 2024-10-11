@@ -1,10 +1,11 @@
-# **TwitterCloneAssignment**
+# **TwitterCloneAssignment** :tada:
 
-This project aims to develop a Twitter-like platform, structured into four key stages. We will begin with the creation of an architecture diagram, followed by the implementation of two interconnected microservices. This overview will outline each step briefly, providing a clear understanding of our process. For a comprehensive overview a![Figma Link](https://www.figma.com/board/yup3d434pA2f6q1tH27IRE/Tweed-Application?node-id=0-1&node-type=canvas)  
+This project aims to develop a Twitter-like platform, structured into four key stages. We will begin with the creation of an architecture diagram, followed by the implementation of two interconnected microservices. This overview will outline each step briefly, providing a clear understanding of our process. For a comprehensive overview a [Figma Link](https://www.figma.com/board/yup3d434pA2f6q1tH27IRE/Tweed-Application?node-id=0-1&node-type=canvas)
 
 ## **The architectual diagram**
 
-# Picture hier
+![architectureBoundary](https://github.com/Rogengell/TwitterCloneAssignment/blob/main/Diagrams/architectureBoundary.png)
+![architectureDiagram](https://github.com/Rogengell/TwitterCloneAssignment/blob/main/Diagrams/architectureDiagram.png)
 
 As you can clearly see, we have implemented three central microservices in our system.
 
@@ -16,13 +17,17 @@ As you can clearly see, we have implemented three central microservices in our s
 
 These three microservices work together seamlessly to create a comprehensive and user-friendly platform that meets the needs of our users.
 
-## Development Strategy
+## Development Strategy :rocket:
 
 for a quick understanding we made a C4 model up to level 2
 
 **Level 1 C4 Model**
 
+![lvl1](https://github.com/Rogengell/TwitterCloneAssignment/blob/main/Diagrams/level%201.png)
+
 **Level 2 C4 Model**
+
+![lvl2](https://github.com/Rogengell/TwitterCloneAssignment/blob/main/Diagrams/level%202.png)
 
 We chose to implement an API gateway instead of a messaging system like RabbitMQ for several key reasons:
 
@@ -34,12 +39,12 @@ We chose to implement an API gateway instead of a messaging system like RabbitMQ
 
 **Simplified Client Interactions:** Clients benefit from a unified API interface, reducing complexity in interactions.
 
-
 While we prioritized security and simplified interactions with the API gateway, we recognize the advantages of RabbitMQ for other microservices that focus on communication and notifications. RabbitMQ is better suited for loose coupling and asynchronous communication, particularly in complex workflows or event-driven architectures.
 
 Ultimately, a hybrid approach that combines both the API gateway and RabbitMQ could be beneficial. The API gateway can manage requests, while RabbitMQ handles asynchronous communication between services.
 
-## Implementation
+## Implementation :sparkles:
+
 This is a brief overview of the technologies we utilized and the reasons we believe they will benefit our project.
 **Docker:** We package each service into Docker containers to ensure consistent environments and facilitate easier deployment.
 
@@ -50,3 +55,23 @@ This is a brief overview of the technologies we utilized and the reasons we beli
 **Dependency Injection:** This approach fosters loose coupling between components, enhancing code readability and testability. It allows us to inject services such as data access and business logic into our controllers.
 
 **XUnit (Testing):** As we had no prior experience with testing in .NET, we utilized available resources for mocking and testing. This proved to be a valuable learning experience, and we plan to use these tools in future projects.
+
+## Setup :bookmark:
+
+To test the program in Swagger, follow these steps:
+
+1. **Build the Project:**
+   ```
+   dotnet build
+   ```
+2. **Start the Docker Containers:**
+   ```
+   docker compose up -d
+   ```
+3. **Access Swagger UI:**
+   Open your web browser and navigate to:
+   ```
+   localhost:8080/swagger
+   ```
+
+This will launch Swagger UI, where you can explore and test your API endpoints.
