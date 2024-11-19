@@ -26,9 +26,7 @@ public class LoginServiceController : Controller
         Console.WriteLine("Login");
         try
         {
-            Console.WriteLine("before service");
             GeneralResponce result = await _service.Login(loginRequest);
-            System.Console.WriteLine("after service");
             if(result._status == 200)
             {
                 System.Console.WriteLine("200");

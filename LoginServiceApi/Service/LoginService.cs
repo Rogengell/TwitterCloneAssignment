@@ -9,36 +9,41 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Model;
 using LoginServiceApi.Request_Responce;
+using Polly;
 
 namespace LoginServiceApi.Service
 {
     public class LoginService : LoginServiceApi.Service.ILoginService
     {
         private readonly AGWDbContext _context;
+        private readonly IAsyncPolicy _retryPolicy;
 
         public LoginService() { }
-        public LoginService(AGWDbContext dbContext)
+        public LoginService(AGWDbContext dbContext, IAsyncPolicy retryPolicy)
         {
             _context = dbContext;
+            _retryPolicy = retryPolicy;
         }
 
         public async Task<GeneralResponce> Login(LoginRequest loginRequest)
         {
             try
             {
-                var user = await _context.usersTables
-                    .Where(u => u.Email == loginRequest.Email && u.Password == loginRequest.Password).FirstOrDefaultAsync();
+                return await _retryPolicy.ExecuteAsync(async () => {
+                    var user = await _context.usersTables
+                        .Where(u => u.Email == loginRequest.Email && u.Password == loginRequest.Password).FirstOrDefaultAsync();
 
-                if (user == null)
-                {
-                    var searchResult = new GeneralResponce(404, "User not found");
-                    return searchResult;
-                }
-                else
-                {
-                    var searchResult = new GeneralResponce(200, "Success", user);
-                    return searchResult;
-                }
+                    if (user == null)
+                    {
+                        var searchResult = new GeneralResponce(404, "User not found");
+                        return searchResult;
+                    }
+                    else
+                    {
+                        var searchResult = new GeneralResponce(200, "Success", user);
+                        return searchResult;
+                    }
+                });
             }
             catch (System.Exception ex)
             {
@@ -52,14 +57,16 @@ namespace LoginServiceApi.Service
         {
             try
             {
-                _context.usersTables?.Add(new UsersTable
-                {
-                    Email = createRequest.email,
-                    Password = createRequest.password
+                return await _retryPolicy.ExecuteAsync(async () => {
+                    _context.usersTables?.Add(new UsersTable
+                    {
+                        Email = createRequest.email,
+                        Password = createRequest.password
+                    });
+                    await _context.SaveChangesAsync();
+                    var searchResult = new GeneralResponce(200, "Success");
+                    return searchResult;
                 });
-                await _context.SaveChangesAsync();
-                var searchResult = new GeneralResponce(200, "Success");
-                return searchResult;
             }
             catch (System.Exception ex)
             {
@@ -73,22 +80,24 @@ namespace LoginServiceApi.Service
         {
             try
             {
-                _context.usersTables?.Update(new UsersTable
-                {
-                    Id = (int)updateRequest.Id,
-                    Email = updateRequest.Email,
-                    Password = updateRequest.Password,
-                    UserName = updateRequest.UserName,
-                    Mobile = updateRequest.Mobile,
-                    Address = updateRequest.Address,
-                    FirstName = updateRequest.FirstName,
-                    LastName = updateRequest.LastName,
-                    Gender = updateRequest.Gender
+                return await _retryPolicy.ExecuteAsync(async () => {
+                    _context.usersTables?.Update(new UsersTable
+                    {
+                        Id = (int)updateRequest.Id,
+                        Email = updateRequest.Email,
+                        Password = updateRequest.Password,
+                        UserName = updateRequest.UserName,
+                        Mobile = updateRequest.Mobile,
+                        Address = updateRequest.Address,
+                        FirstName = updateRequest.FirstName,
+                        LastName = updateRequest.LastName,
+                        Gender = updateRequest.Gender
 
+                    });
+                    await _context.SaveChangesAsync();
+                    var searchResult = new GeneralResponce(200, "Success");
+                    return searchResult;
                 });
-                await _context.SaveChangesAsync();
-                var searchResult = new GeneralResponce(200, "Success");
-                return searchResult;
             }
             catch (System.Exception ex)
             {
@@ -101,15 +110,17 @@ namespace LoginServiceApi.Service
         {
             try
             {
-                _context.usersTables?.Remove(new UsersTable
-                {
-                    Id = deleteRequest.Id.Value,
-                    Email = deleteRequest.email,
-                    Password = deleteRequest.password
+                return await _retryPolicy.ExecuteAsync(async () => {
+                    _context.usersTables?.Remove(new UsersTable
+                    {
+                        Id = deleteRequest.Id.Value,
+                        Email = deleteRequest.email,
+                        Password = deleteRequest.password
+                    });
+                    await _context.SaveChangesAsync();
+                    var searchResult = new GeneralResponce(200, "Success");
+                    return searchResult;
                 });
-                await _context.SaveChangesAsync();
-                var searchResult = new GeneralResponce(200, "Success");
-                return searchResult;
             }
             catch (System.Exception ex)
             {

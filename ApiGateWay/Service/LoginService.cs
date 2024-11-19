@@ -9,19 +9,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Model;
 using Newtonsoft.Json;
+using Polly;
 
 namespace ApiGateWay.Service
 {
     public class LoginService : ApiGateWay.Service.ILoginService
     {
-        public LoginService()
-        { }
+        private readonly HttpClient _httpClient;
+        public LoginService(IHttpClientFactory httpClientFactory)
+        { 
+            _httpClient = httpClientFactory.CreateClient("RetryClient");
+        }
 
         public async Task<GeneralResponce> Login(string email, string password)
         {
             try
             {
-                HttpClient client = new HttpClient();
+                HttpClient client = _httpClient;
                 LoginRequest loginRequest = new LoginRequest(email, password);
 
                 string json = JsonConvert.SerializeObject(loginRequest);
@@ -54,7 +58,7 @@ namespace ApiGateWay.Service
         {
             try
             {
-                HttpClient client = new HttpClient();
+                HttpClient client = _httpClient;
                 string json = JsonConvert.SerializeObject(createRequest);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
@@ -85,7 +89,7 @@ namespace ApiGateWay.Service
         {
             try
             {
-                HttpClient client = new HttpClient();
+                HttpClient client = _httpClient;
                 string json = JsonConvert.SerializeObject(updateRequest);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
@@ -113,7 +117,7 @@ namespace ApiGateWay.Service
         {
             try
             {
-                HttpClient client = new HttpClient();
+                HttpClient client = _httpClient;
                 string json = JsonConvert.SerializeObject(deleteRequest);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 

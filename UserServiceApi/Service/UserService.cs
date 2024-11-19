@@ -1,6 +1,7 @@
 
 using EFramework.Data;
 using Microsoft.EntityFrameworkCore;
+using Polly;
 using UserServiceApi.Request_Responce;
 
 namespace UserServiceApi.Service
@@ -8,36 +9,40 @@ namespace UserServiceApi.Service
     public class UserService : IUserService
     {
         private readonly AGWDbContext _context;
+        private readonly IAsyncPolicy _retryPolicy;
+
 
         public UserService()
         {
 
         }
-        public UserService(AGWDbContext context)
+        public UserService(AGWDbContext context, IAsyncPolicy retryPolicy)
         {
             _context = context;
+            _retryPolicy = retryPolicy;
+
         }
 
         public async Task<GeneralResponse> GetAllUser()
         {
             try
             {
-                Console.WriteLine("Getting all users");
+                return await _retryPolicy.ExecuteAsync(async () => {
 
+                    var users = await _context.usersTables.ToListAsync();
 
-                var users = await _context.usersTables.ToListAsync();
+                    if (users == null)
+                    {
+                        var searchResult = new GeneralResponse(404, "no user found");
+                        return searchResult;
+                    }
+                    else
+                    {
 
-                if (users == null)
-                {
-                    var searchResult = new GeneralResponse(404, "no user found");
-                    return searchResult;
-                }
-                else
-                {
-
-                    var searchResult = new GeneralResponse(200, "Success", users);
-                    return searchResult;
-                }
+                        var searchResult = new GeneralResponse(200, "Success", users);
+                        return searchResult;
+                    }
+                });
 
             }
             catch (System.Exception ex)
@@ -53,21 +58,22 @@ namespace UserServiceApi.Service
         {
             try
             {
-                Console.WriteLine("Getting users by username");
+                return await _retryPolicy.ExecuteAsync(async () => {
 
-                var users = await _context.usersTables
-                    .Where(u => u.UserName == searchRequest.UserName).ToListAsync();
+                    var users = await _context.usersTables
+                        .Where(u => u.UserName == searchRequest.UserName).ToListAsync();
 
-                if (users == null)
-                {
-                    var searchResult = new GeneralResponse(404, "no user found with the username: " + searchRequest.UserName);
-                    return searchResult;
-                }
-                else
-                {
-                    var searchResult = new GeneralResponse(200, "Success", users);
-                    return searchResult;
-                }
+                    if (users == null)
+                    {
+                        var searchResult = new GeneralResponse(404, "no user found with the username: " + searchRequest.UserName);
+                        return searchResult;
+                    }
+                    else
+                    {
+                        var searchResult = new GeneralResponse(200, "Success", users);
+                        return searchResult;
+                    }
+                });
 
             }
             catch (System.Exception ex)
@@ -81,21 +87,22 @@ namespace UserServiceApi.Service
         {
             try
             {
-                Console.WriteLine("Getting users by username");
+                return await _retryPolicy.ExecuteAsync(async () => {
 
-                var users = await _context.usersTables
-                    .Where(u => u.Gender == searchRequest.UserName).ToListAsync();
+                    var users = await _context.usersTables
+                        .Where(u => u.Gender == searchRequest.UserName).ToListAsync();
 
-                if (users == null)
-                {
-                    var searchResult = new GeneralResponse(404, "no user found with this tag: " + searchRequest.UserName);
-                    return searchResult;
-                }
-                else
-                {
-                    var searchResult = new GeneralResponse(200, "Success", users);
-                    return searchResult;
-                }
+                    if (users == null)
+                    {
+                        var searchResult = new GeneralResponse(404, "no user found with this tag: " + searchRequest.UserName);
+                        return searchResult;
+                    }
+                    else
+                    {
+                        var searchResult = new GeneralResponse(200, "Success", users);
+                        return searchResult;
+                    }
+                });
 
             }
             catch (System.Exception ex)
