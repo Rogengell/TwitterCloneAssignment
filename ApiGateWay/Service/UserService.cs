@@ -6,8 +6,12 @@ namespace ApiGateWay.Service
 {
     public class UserService : IUserService
     {
-        public UserService()
+        private readonly HttpClient _httpClient;
+
+        public UserService(IHttpClientFactory httpClientFactory)
         {
+            _httpClient = httpClientFactory.CreateClient("RetryClient");
+
         }
 
         public async Task<GeneralResponce> GetAllUser()
@@ -16,7 +20,7 @@ namespace ApiGateWay.Service
             {
                 Console.WriteLine("Getting all users");
 
-                HttpClient client = new HttpClient();
+                HttpClient client = _httpClient;
                 UserRequest userRequest = new UserRequest();
 
                 string json = JsonConvert.SerializeObject(userRequest);
@@ -48,7 +52,7 @@ namespace ApiGateWay.Service
             {
                 Console.WriteLine("Getting all users");
 
-                HttpClient client = new HttpClient();
+                HttpClient client = _httpClient;
                 UserRequest userRequest = new UserRequest(searchRequest);
 
                 string json = JsonConvert.SerializeObject(userRequest);
@@ -80,7 +84,7 @@ namespace ApiGateWay.Service
             {
                 Console.WriteLine("Getting all users");
 
-                HttpClient client = new HttpClient();
+                HttpClient client = _httpClient;
                 UserRequest userRequest = new UserRequest(searchRequest);
 
                 string json = JsonConvert.SerializeObject(userRequest);
