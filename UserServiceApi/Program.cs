@@ -20,10 +20,10 @@ builder.Services.AddDbContext<AGWDbContext>(options =>
 );
 
 var retryPolicy = Policy
-    .Handle<SqlException>(ex => ex.Number == -2 || ex.Number == 4060 || ex.Number == 40197)
-    .Or<TimeoutException>() 
+    .Handle<SqlException>()
+    .Or<TimeoutException>()
     .WaitAndRetryAsync(
-        retryCount: 3, 
+        retryCount: 3,
         sleepDurationProvider: attempt =>
         {
             return attempt switch
@@ -36,7 +36,8 @@ var retryPolicy = Policy
         },
         onRetry: (exception, timeSpan, retryCount, context) =>
         {
-            Console.WriteLine($"Retry {retryCount} after {timeSpan.Seconds} seconds due to: {exception.Message}");
+            var sqlErrorNumber = exception is SqlException sqlException ? sqlException.Number.ToString() : "N/A";
+            Console.WriteLine($"Retry {retryCount} after {timeSpan.Seconds} seconds due to: {exception.Message} SQL Error Number: {sqlErrorNumber}");
         });
 
 builder.Services.AddSingleton<IAsyncPolicy>(retryPolicy);
