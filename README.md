@@ -91,3 +91,23 @@ kubectl create clusterrolebinding webadmin --clusterrole=cluster-admin --service
 kubectl create token webadmin -n kubernetes-dashboard
 kubectl proxy
 http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+
+
+
+
+docker build -f LoginServiceApi/Dockerfile -t my-loginserviceapi .
+docker build -f UserServiceApi/Dockerfile -t my-userserviceapi .
+docker build -f ApiGateWay/Dockerfile -t my-apigateway .
+
+docker build -f EFramework/Migrations.Dockerfile -t my-ef-migration .
+
+
+kubectl apply -f user-db-volume.yml
+kubectl apply -f user-db.yml
+kubectl apply -f userserviceapi.yml
+kubectl apply -f apigateway.yml
+kubectl apply -f loginserviceapi.yml
+kubectl apply -f migration_service.yml
+
+
+http://127.0.0.1:30000/Login/Login?username=1234&password=1234
