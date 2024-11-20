@@ -1,5 +1,7 @@
 # **TwitterCloneAssignment** :tada:
 
+# Assignment #1 :memo:
+
 This project aims to develop a Twitter-like platform, structured into four key stages. We will begin with the creation of an architecture diagram, followed by the implementation of two interconnected microservices. This overview will outline each step briefly, providing a clear understanding of our process. For a comprehensive overview a [Figma Link](https://www.figma.com/board/yup3d434pA2f6q1tH27IRE/Tweed-Application?node-id=0-1&node-type=canvas)
 
 ## **The architectual diagram**
@@ -75,3 +77,5 @@ To test the program in Swagger, follow these steps:
    ```
 
 This will launch Swagger UI, where you can explore and test your API endpoints.
+
+# Assignment #2 :memo:
