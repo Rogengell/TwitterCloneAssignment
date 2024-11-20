@@ -19,10 +19,10 @@ builder.Services.AddDbContext<AGWDbContext>(options =>
 );
 
 var retryPolicy = Policy
-    .Handle<SqlException>(ex => ex.Number == -2 || ex.Number == 4060 || ex.Number == 40197)
-    .Or<TimeoutException>() 
+    .Handle<SqlException>()
+    .Or<TimeoutException>()
     .WaitAndRetryAsync(
-        retryCount: 3, 
+        retryCount: 3,
         sleepDurationProvider: attempt =>
         {
             return attempt switch

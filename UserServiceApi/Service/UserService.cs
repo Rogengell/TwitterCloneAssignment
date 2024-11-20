@@ -27,7 +27,8 @@ namespace UserServiceApi.Service
         {
             try
             {
-                return await _retryPolicy.ExecuteAsync(async () => {
+                return await _retryPolicy.ExecuteAsync(async () =>
+                {
 
                     var users = await _context.usersTables.ToListAsync();
 
@@ -58,7 +59,8 @@ namespace UserServiceApi.Service
         {
             try
             {
-                return await _retryPolicy.ExecuteAsync(async () => {
+                return await _retryPolicy.ExecuteAsync(async () =>
+                {
 
                     var users = await _context.usersTables
                         .Where(u => u.UserName == searchRequest.UserName).ToListAsync();
@@ -87,7 +89,8 @@ namespace UserServiceApi.Service
         {
             try
             {
-                return await _retryPolicy.ExecuteAsync(async () => {
+                return await _retryPolicy.ExecuteAsync(async () =>
+                {
 
                     var users = await _context.usersTables
                         .Where(u => u.Gender == searchRequest.UserName).ToListAsync();
@@ -103,7 +106,6 @@ namespace UserServiceApi.Service
                         return searchResult;
                     }
                 });
-
             }
             catch (System.Exception ex)
             {
