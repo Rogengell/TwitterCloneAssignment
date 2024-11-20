@@ -79,3 +79,12 @@ To test the program in Swagger, follow these steps:
 This will launch Swagger UI, where you can explore and test your API endpoints.
 
 # Assignment #2 :memo:
+
+kubectl delete -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+kubectl create sa webadmin -n kubernetes-dashboard
+kubectl create clusterrolebinding webadmin --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:webadmin
+kubectl create token webadmin -n kubernetes-dashboard
+kubectl proxy
+http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
