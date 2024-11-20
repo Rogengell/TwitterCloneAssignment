@@ -1,0 +1,14 @@
+# migration_service.yml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migration-service
+spec:
+  template:
+    spec:
+      containers:
+      - name: migration-service
+        image: my-ef-migration:latest
+        imagePullPolicy: Never
+        command: ["sh", "-c", "/app/run-ef-database-update.sh"]
+      restartPolicy: OnFailure

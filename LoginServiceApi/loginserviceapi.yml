@@ -1,0 +1,41 @@
+# userserviceapi.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loginserviceapi
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loginserviceapi
+  template:
+    metadata:
+      labels:
+        app: loginserviceapi
+    spec:
+      containers:
+      - name: loginserviceapi
+        image: my-loginserviceapi
+        imagePullPolicy: Never
+        env:
+        - name: LOGIN_SERVICE_URL
+          value: "http://loginserviceapi"
+        ports:
+        - containerPort: 8082
+      initContainers:
+      - name: wait-for-db
+        image: busybox
+        command: ["sh", "-c", "until nc -z user-db 1433; do echo waiting for db; sleep 2; done;"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loginserviceapi
+  namespace: default
+spec:
+  selector:
+    app: loginserviceapi
+  ports:
+  - port: 8082
+    targetPort: 8082

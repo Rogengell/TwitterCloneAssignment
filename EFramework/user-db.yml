@@ -1,0 +1,53 @@
+# user-db.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-db
+  template:
+    metadata:
+      labels:
+        app: user-db
+    spec:
+      containers:
+      - name: user-db
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+        - name: MSSQL_SA_PASSWORD
+          value: "SuperSecret7!"
+        - name: ACCEPT_EULA
+          value: "Y"
+        ports:
+        - containerPort: 1433
+        volumeMounts:
+        - mountPath: /var/opt/mssql
+          name: mssql-data
+        livenessProbe:
+          exec:
+            command: ["pgrep", "sqlservr"]
+          initialDelaySeconds: 60
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command: ["pgrep", "sqlservr"]
+          initialDelaySeconds: 60
+          periodSeconds: 10
+      volumes:
+      - name: mssql-data
+        persistentVolumeClaim:
+          claimName: mssql-user-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-db
+spec:
+  ports:
+  - port: 1433
+    targetPort: 1433
+  selector:
+    app: user-db
