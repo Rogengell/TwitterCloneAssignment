@@ -7,6 +7,7 @@ using LoginServiceApi.Request_Responce;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class LoginServiceController : Controller
@@ -16,25 +17,24 @@ public class LoginServiceController : Controller
     {
         _service = service;
     }
-    
-    [Authorize]
+
     [HttpPost("Login")]
     public async Task<GeneralResponce> Login([FromBody] LoginRequest loginRequest)
     {
         if (!ModelState.IsValid)
         {
-            return new GeneralResponce(400,"Invalid data");
+            return new GeneralResponce(400, "Invalid data");
         }
         Console.WriteLine("Login");
         try
         {
             GeneralResponce result = await _service.Login(loginRequest);
-            if(result._status == 200)
+            if (result._status == 200)
             {
                 System.Console.WriteLine("200");
                 return result;
             }
-            else 
+            else
             {
                 System.Console.WriteLine(result._status);
                 return result;
@@ -43,7 +43,7 @@ public class LoginServiceController : Controller
         catch (System.Exception ex)
         {
             Console.WriteLine("Something went wrong Login" + ex.Message);
-            return new GeneralResponce(400,ex.Message);
+            return new GeneralResponce(400, ex.Message);
         }
     }
 
@@ -52,16 +52,16 @@ public class LoginServiceController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return new GeneralResponce(400,"Invalid data");
+            return new GeneralResponce(400, "Invalid data");
         }
         try
         {
             GeneralResponce result = await _service.CreateAccount(request);
-            if(result._status == 200)
+            if (result._status == 200)
             {
                 return result;
             }
-            else 
+            else
             {
                 return result;
             }
@@ -69,7 +69,7 @@ public class LoginServiceController : Controller
         catch (System.Exception ex)
         {
             Console.WriteLine("Something went wrong creating Account" + ex.Message);
-            return new GeneralResponce(400,ex.Message);
+            return new GeneralResponce(400, ex.Message);
         }
     }
 
@@ -78,16 +78,16 @@ public class LoginServiceController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return new GeneralResponce(400,"Invalid data");
+            return new GeneralResponce(400, "Invalid data");
         }
         try
         {
             GeneralResponce result = await _service.UpdateAccount(updateRequest);
-            if(result._status == 200)
+            if (result._status == 200)
             {
                 return result;
             }
-            else 
+            else
             {
                 return result;
             }
@@ -95,7 +95,7 @@ public class LoginServiceController : Controller
         catch (System.Exception ex)
         {
             Console.WriteLine("Something went wrong createing the logging" + ex.Message);
-            return new GeneralResponce(400,ex.Message);
+            return new GeneralResponce(400, ex.Message);
         }
     }
 
@@ -104,16 +104,16 @@ public class LoginServiceController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return new GeneralResponce(400,"Invalid data");
+            return new GeneralResponce(400, "Invalid data");
         }
         try
         {
             GeneralResponce result = await _service.DeleteAccount(request);
-            if(result._status == 200)
+            if (result._status == 200)
             {
                 return result;
             }
-            else 
+            else
             {
                 return result;
             }
@@ -121,7 +121,7 @@ public class LoginServiceController : Controller
         catch (System.Exception ex)
         {
             Console.WriteLine("Something went wrong createing the logging" + ex.Message);
-            return new GeneralResponce(400,ex.Message);
+            return new GeneralResponce(400, ex.Message);
         }
     }
 }
