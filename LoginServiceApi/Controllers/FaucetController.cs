@@ -11,17 +11,17 @@ using Microsoft.IdentityModel.Tokens;
 namespace LoginServiceApi.Controllers
 {
 
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class FaucetController : ControllerBase
     {
         private string _jwtKey;
         private string _jwtIssuer;
 
-        public FaucetController(string jwtKey, string jwtIssuer)
+        public FaucetController(Settings settings)
         {
-            _jwtKey = jwtKey;
-            _jwtIssuer = jwtIssuer;
+            _jwtKey = settings.JwtKey;
+            _jwtIssuer = settings.JwtIssuer;
         }
 
         [HttpGet("GetToken")]
@@ -40,7 +40,7 @@ namespace LoginServiceApi.Controllers
                     signingCredentials: credentials
                 );
                 var token = new JwtSecurityTokenHandler().WriteToken(securityToken);
-                System.Console.WriteLine("token: " + token);
+
                 return new GeneralResponce(200, token);
             }
             catch (System.Exception ex)
