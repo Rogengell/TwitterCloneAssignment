@@ -6,6 +6,7 @@ using Polly;
 using Polly.Extensions.Http;
 
 var builder = WebApplication.CreateBuilder(args);
+var config = builder.Configuration.GetSection("Settings").Get<Settings>();
 
 var retryPolicy = HttpPolicyExtensions
     .HandleTransientHttpError()
@@ -18,6 +19,7 @@ builder.Services.AddHttpClient("RetryClient")
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
+builder.Services.AddSingleton<Settings>(config);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
