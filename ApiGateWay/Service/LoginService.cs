@@ -17,7 +17,7 @@ namespace ApiGateWay.Service
     {
         private readonly HttpClient _httpClient;
         public LoginService(IHttpClientFactory httpClientFactory)
-        { 
+        {
             _httpClient = httpClientFactory.CreateClient("RetryClient");
         }
 
@@ -127,6 +127,30 @@ namespace ApiGateWay.Service
 
                 var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
 
+                if (generalResponce == null)
+                {
+                    return new GeneralResponce(400, "connection failed");
+                }
+
+                return generalResponce;
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return new GeneralResponce(400, ex.Message);
+            }
+        }
+
+        public async Task<GeneralResponce> GetAuthenticated()
+        {
+            try
+            {
+                HttpClient client = _httpClient;
+                HttpResponseMessage response = await client.GetAsync("http://loginserviceapi:8082/Faucet/GetToken");
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
+                System.Console.WriteLine(responseBody);
                 if (generalResponce == null)
                 {
                     return new GeneralResponce(400, "connection failed");

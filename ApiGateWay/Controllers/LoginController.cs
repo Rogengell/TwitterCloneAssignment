@@ -24,19 +24,19 @@ public class LoginController : Controller
         System.Console.WriteLine(Path.Combine(Directory.GetCurrentDirectory(), "../EFramework"));
         if (String.IsNullOrEmpty(username) && String.IsNullOrEmpty(password))
         {
-            return StatusCode(400,"Empty username or password");
+            return StatusCode(400, "Empty username or password");
         }
         Console.WriteLine("Login");
         try
         {
             Console.WriteLine("before service");
-            var result = await _service.Login(username,password);
+            var result = await _service.Login(username, password);
             System.Console.WriteLine("after service");
-            if(result._status == 200)
+            if (result._status == 200)
             {
-                return StatusCode(200,result);
+                return StatusCode(200, result);
             }
-            else 
+            else
             {
                 return StatusCode(result._status, result._message);
             }
@@ -44,7 +44,7 @@ public class LoginController : Controller
         catch (System.Exception ex)
         {
             Console.WriteLine("Something went wrong Login" + ex.Message);
-            return StatusCode(400,ex.Message);
+            return StatusCode(400, ex.Message);
         }
     }
 
@@ -53,24 +53,24 @@ public class LoginController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return StatusCode(400,"Invalid data");
+            return StatusCode(400, "Invalid data");
         }
         try
         {
             var result = await _service.CreateAccount(request);
-            if(result._status == 200)
+            if (result._status == 200)
             {
-                return StatusCode(200,result);
+                return StatusCode(200, result);
             }
-            else 
+            else
             {
-                return StatusCode(result._status,result._message);
+                return StatusCode(result._status, result._message);
             }
         }
         catch (System.Exception ex)
         {
             Console.WriteLine("Something went wrong creating Account" + ex.Message);
-            return StatusCode(400,ex.Message);
+            return StatusCode(400, ex.Message);
         }
     }
 
@@ -79,24 +79,24 @@ public class LoginController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return StatusCode(400,"Invalid data");
+            return StatusCode(400, "Invalid data");
         }
         try
         {
             var result = await _service.UpdateAccount(updateRequest);
-            if(result._status == 200)
+            if (result._status == 200)
             {
-                return StatusCode(200,result);
+                return StatusCode(200, result);
             }
-            else 
+            else
             {
-                return StatusCode(result._status,result._message);
+                return StatusCode(result._status, result._message);
             }
         }
         catch (System.Exception ex)
         {
             Console.WriteLine("Something went wrong createing the logging" + ex.Message);
-            return StatusCode(400,ex.Message);
+            return StatusCode(400, ex.Message);
         }
     }
 
@@ -105,24 +105,46 @@ public class LoginController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return StatusCode(400,"Empty username or password");
+            return StatusCode(400, "Empty username or password");
         }
         try
         {
             var result = await _service.DeleteAccount(request);
-            if(result._status == 200)
+            if (result._status == 200)
             {
-                return StatusCode(200,result);
+                return StatusCode(200, result);
             }
-            else 
+            else
             {
-                return StatusCode(result._status,result._message);
+                return StatusCode(result._status, result._message);
             }
         }
         catch (System.Exception ex)
         {
             Console.WriteLine("Something went wrong createing the logging" + ex.Message);
-            return StatusCode(400,ex.Message);
+            return StatusCode(400, ex.Message);
+        }
+    }
+
+    [HttpGet("GEtAuthenticated")]
+    public async Task<IActionResult> GetAuthenticated()
+    {
+        try
+        {
+            var result = await _service.GetAuthenticated();
+            if (result._status == 200)
+            {
+                return StatusCode(200, result);
+            }
+            else
+            {
+                return StatusCode(result._status, result._message);
+            }
+        }
+        catch (System.Exception ex)
+        {
+            Console.WriteLine("Something went wrong getting authenticated" + ex.Message);
+            return StatusCode(400, ex.Message);
         }
     }
 }
