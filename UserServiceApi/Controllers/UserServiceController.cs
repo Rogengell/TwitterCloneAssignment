@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using UserServiceApi.Service;
 using Microsoft.AspNetCore.Mvc;
 using UserServiceApi.Request_Responce;
+using Microsoft.AspNetCore.Authorization;
 
 namespace UserServiceApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UserServiceController : ControllerBase
