@@ -10,11 +10,14 @@ namespace ApiGateWay.Service
     {
         private readonly HttpClient _httpClient;
         private readonly Settings _settings;
+        private readonly SecretSettings _secretSettings;
 
-        public UserService(IHttpClientFactory httpClientFactory, Settings settings)
+
+        public UserService(IHttpClientFactory httpClientFactory, Settings settings, SecretSettings secretSettings)
         {
             _httpClient = httpClientFactory.CreateClient("RetryClient");
             _settings = settings;
+            _secretSettings = secretSettings;
         }
 
         public async Task<GeneralResponce> GetAllUser()
@@ -24,12 +27,13 @@ namespace ApiGateWay.Service
                 Console.WriteLine("Getting all users");
 
                 HttpClient client = _httpClient;
-
                 UserRequest userRequest = new UserRequest();
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _settings.UserServiceToken.Trim());
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                                
                 string json = JsonConvert.SerializeObject(userRequest);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _secretSettings.MICRO_SERVICE_TOKEN.Trim());
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 HttpResponseMessage response = await client.GetAsync("http://userserviceapi:8081/UserService/GetAllUser");
 
@@ -60,21 +64,26 @@ namespace ApiGateWay.Service
         {
             try
             {
-                Console.WriteLine("Getting all users");
-
                 HttpClient client = _httpClient;
                 UserRequest userRequest = new UserRequest(searchRequest);
 
                 string json = JsonConvert.SerializeObject(userRequest);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-                System.Console.WriteLine("sending request");
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _secretSettings.MICRO_SERVICE_TOKEN.Trim());
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
                 HttpResponseMessage response = await client.PostAsync("http://userserviceapi:8081/UserService/GetUser", content);
+
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    Console.WriteLine("Authorization failed. Check the token and claims.");
+                }
 
                 string responseBody = await response.Content.ReadAsStringAsync();
 
                 var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
-                System.Console.WriteLine("got response");
-                System.Console.WriteLine(generalResponce._users);
+
                 if (generalResponce == null)
                 {
                     return new GeneralResponce(400, "connection failed");
@@ -92,17 +101,23 @@ namespace ApiGateWay.Service
         {
             try
             {
-                Console.WriteLine("Getting all users");
-
                 HttpClient client = _httpClient;
                 UserRequest userRequest = new UserRequest(searchRequest);
 
                 string json = JsonConvert.SerializeObject(userRequest);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _secretSettings.MICRO_SERVICE_TOKEN.Trim());
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
                 HttpResponseMessage response = await client.PostAsync("http://userserviceapi:8081/UserService/GetUserByTag", content);
 
                 string responseBody = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    Console.WriteLine("Authorization failed. Check the token and claims.");
+                }
 
                 var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
 

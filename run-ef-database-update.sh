@@ -2,11 +2,7 @@
 # Esben and Asbjørn fandt ud af dette
 
 # for the DB to be fully startet and ready for changes if any
-sleep 1
-
-while ! nc -z user-db 1433; do
-  sleep 5
-done
+sleep 60
 
 cd /app/EFramework
 dotnet tool install --global dotnet-ef

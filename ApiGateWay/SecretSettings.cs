@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace ApiGateWay
 {
-    public class Settings
+    public class SecretSettings
     {
-        public string VoultHostName { get; set; }
+        public string MICRO_SERVICE_TOKEN { get; set; }
     }
 }
