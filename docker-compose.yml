@@ -58,6 +58,9 @@ services:
     build:
       context: .
       dockerfile: EFramework/Migrations.Dockerfile
+    networks:
+      - microservice-network
+      - default
     depends_on:
       user-db:
         condition: service_healthy
