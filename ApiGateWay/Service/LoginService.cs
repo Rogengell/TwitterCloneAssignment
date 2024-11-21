@@ -150,7 +150,7 @@ namespace ApiGateWay.Service
                 string responseBody = await response.Content.ReadAsStringAsync();
 
                 var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
-                System.Console.WriteLine(responseBody);
+
                 if (generalResponce == null)
                 {
                     return new GeneralResponce(400, "connection failed");

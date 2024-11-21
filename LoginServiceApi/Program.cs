@@ -31,15 +31,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 );
 
-var configuration = builder.Configuration;
-builder.Services.AddSingleton(jwtKey);
-builder.Services.AddSingleton(jwtIssuer);
+builder.Services.AddSingleton(config);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<LoginServiceApi.Service.ILoginService, LoginServiceApi.Service.LoginService>();
 
+var configuration = builder.Configuration;
 builder.Services.AddDbContext<AGWDbContext>(options =>
     options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
 );
