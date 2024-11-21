@@ -1,13 +1,39 @@
+using System.Text;
 using EFramework;
 using EFramework.Data;
+using LoginServiceApi;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Polly;
 
 var builder = WebApplication.CreateBuilder(args);
+var config = builder.Configuration.GetSection("Settings").Get<Settings>();
+
+string jwtIssuer = config.JwtIssuer;
+string jwtKey = config.JwtKey;
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+    option =>
+    {
+        option.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = false,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtIssuer,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+        };
+    }
+
+);
 
 var configuration = builder.Configuration;
-
+builder.Services.AddSingleton(jwtKey);
+builder.Services.AddSingleton(jwtIssuer);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -49,6 +75,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthentication();
 app.MapControllers();
 //app.UseHttpsRedirection();
 
