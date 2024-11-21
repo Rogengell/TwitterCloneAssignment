@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EFramework.Data;
 using LoginServiceApi.Request_Responce;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -15,7 +16,8 @@ public class LoginServiceController : Controller
     {
         _service = service;
     }
-
+    
+    [Authorize]
     [HttpPost("Login")]
     public async Task<GeneralResponce> Login([FromBody] LoginRequest loginRequest)
     {

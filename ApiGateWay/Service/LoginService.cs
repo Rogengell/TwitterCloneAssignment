@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using ApiGateWay.Request_Responce;
 using EFramework.Data;
@@ -16,9 +18,11 @@ namespace ApiGateWay.Service
     public class LoginService : ApiGateWay.Service.ILoginService
     {
         private readonly HttpClient _httpClient;
-        public LoginService(IHttpClientFactory httpClientFactory)
+        private readonly Settings _settings;
+        public LoginService(IHttpClientFactory httpClientFactory, Settings settings)
         {
             _httpClient = httpClientFactory.CreateClient("RetryClient");
+            _settings = settings;
         }
 
         public async Task<GeneralResponce> Login(string email, string password)
@@ -31,11 +35,24 @@ namespace ApiGateWay.Service
                 string json = JsonConvert.SerializeObject(loginRequest);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
+                // Log Token and Header
+                Console.WriteLine($"Token: {_settings.LoginServiceToken}");
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _settings.LoginServiceToken.Trim());
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
                 HttpResponseMessage response = await client.PostAsync("http://loginserviceapi:8082/LoginService/Login", content);
 
                 string responseBody = await response.Content.ReadAsStringAsync();
 
-                System.Console.WriteLine(responseBody);
+                // Log Response Details
+                Console.WriteLine($"Response Status: {response.StatusCode}");
+                Console.WriteLine($"Response Headers: {response.Headers}");
+                Console.WriteLine($"Response Body: {responseBody}");
+
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    Console.WriteLine("Authorization failed. Check the token and claims.");
+                }
 
                 var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
 
@@ -155,7 +172,7 @@ namespace ApiGateWay.Service
                 {
                     return new GeneralResponce(400, "connection failed");
                 }
-
+                _settings.LoginServiceToken = generalResponce._message;
                 return generalResponce;
             }
             catch (System.Exception ex)
