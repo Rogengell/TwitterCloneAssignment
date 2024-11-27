@@ -25,7 +25,7 @@ public class LoginController : Controller
     [HttpGet("Login")]
     public async Task<IActionResult> Login(string username, string password)
     {
-        _logger.LogInformation("Login");
+        _logger.LogInformation("Deutscher Panzer Jaaaaa");
         System.Console.WriteLine(Path.Combine(Directory.GetCurrentDirectory(), "../EFramework"));
         if (String.IsNullOrEmpty(username) && String.IsNullOrEmpty(password))
         {

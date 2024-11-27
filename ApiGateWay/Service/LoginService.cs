@@ -22,7 +22,7 @@ namespace ApiGateWay.Service
         private readonly SecretSettings _secretSettings;
         private readonly ILogger<LoginService> _logger;
 
-        public LoginService(IHttpClientFactory httpClientFactory, Settings settings, SecretSettings secretSettings,ILogger<LoginService> logger)
+        public LoginService(IHttpClientFactory httpClientFactory, Settings settings, SecretSettings secretSettings, ILogger<LoginService> logger)
         {
             _httpClient = httpClientFactory.CreateClient("RetryClient");
             _settings = settings;
@@ -83,12 +83,12 @@ namespace ApiGateWay.Service
                 HttpResponseMessage response = await client.PutAsync("http://loginserviceapi:8082/LoginService/Create", content);
 
                 string responseBody = await response.Content.ReadAsStringAsync();
-                
+
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     Console.WriteLine("Authorization failed. Check the token and claims.");
                 }
-                
+
                 var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
 
                 if (generalResponce == null)
@@ -119,12 +119,12 @@ namespace ApiGateWay.Service
                 HttpResponseMessage response = await client.PostAsync("http://loginserviceapi:8082/LoginService/Update", content);
 
                 string responseBody = await response.Content.ReadAsStringAsync();
-                
+
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     Console.WriteLine("Authorization failed. Check the token and claims.");
                 }
-                
+
                 var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
 
                 if (generalResponce == null)
@@ -155,12 +155,12 @@ namespace ApiGateWay.Service
                 HttpResponseMessage response = await client.PostAsync("http://loginserviceapi:8082/LoginService/Delete", content);
 
                 string responseBody = await response.Content.ReadAsStringAsync();
-                
+
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     Console.WriteLine("Authorization failed. Check the token and claims.");
                 }
-                
+
                 var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
 
                 if (generalResponce == null)
@@ -183,17 +183,17 @@ namespace ApiGateWay.Service
             {
                 HttpClient client = _httpClient;
 
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _secretSettings.MICRO_SERVICE_TOKEN.Trim());
+                // client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _secretSettings.MICRO_SERVICE_TOKEN.Trim());
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 HttpResponseMessage response = await client.GetAsync("http://loginserviceapi:8082/Faucet/GetToken");
                 string responseBody = await response.Content.ReadAsStringAsync();
-                
+
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     Console.WriteLine("Authorization failed. Check the token and claims.");
                 }
-                
+
                 var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
 
                 if (generalResponce == null)
