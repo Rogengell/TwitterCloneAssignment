@@ -8,9 +8,18 @@ using Vault;
 using Vault.Model;
 using Vault.Client;
 using Newtonsoft.Json.Linq;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration.GetSection("Settings").Get<Settings>();
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()  
+    .WriteTo.Http("http://fluentd:24224")  
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 var retryPolicy = HttpPolicyExtensions
     .HandleTransientHttpError()
@@ -57,3 +66,5 @@ if (app.Environment.IsDevelopment())
 app.MapControllers();
 
 app.Run();
+
+AppDomain.CurrentDomain.ProcessExit += (sender, args) => Log.CloseAndFlush();

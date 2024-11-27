@@ -20,11 +20,14 @@ namespace ApiGateWay.Service
         private readonly HttpClient _httpClient;
         private readonly Settings _settings;
         private readonly SecretSettings _secretSettings;
-        public LoginService(IHttpClientFactory httpClientFactory, Settings settings, SecretSettings secretSettings)
+        private readonly ILogger<LoginService> _logger;
+
+        public LoginService(IHttpClientFactory httpClientFactory, Settings settings, SecretSettings secretSettings,ILogger<LoginService> logger)
         {
             _httpClient = httpClientFactory.CreateClient("RetryClient");
             _settings = settings;
             _secretSettings = secretSettings;
+            _logger = logger;
         }
 
         public async Task<GeneralResponce> Login(string email, string password)

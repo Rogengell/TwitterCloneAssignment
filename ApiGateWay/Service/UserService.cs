@@ -11,13 +11,15 @@ namespace ApiGateWay.Service
         private readonly HttpClient _httpClient;
         private readonly Settings _settings;
         private readonly SecretSettings _secretSettings;
+        private readonly ILogger<UserService> _logger;
 
 
-        public UserService(IHttpClientFactory httpClientFactory, Settings settings, SecretSettings secretSettings)
+        public UserService(IHttpClientFactory httpClientFactory, Settings settings, SecretSettings secretSettings, ILogger<UserService> logger)
         {
             _httpClient = httpClientFactory.CreateClient("RetryClient");
             _settings = settings;
             _secretSettings = secretSettings;
+            _logger = logger;
         }
 
         public async Task<GeneralResponce> GetAllUser()
