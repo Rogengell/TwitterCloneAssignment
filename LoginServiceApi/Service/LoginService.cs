@@ -17,12 +17,15 @@ namespace LoginServiceApi.Service
     {
         private readonly AGWDbContext _context;
         private readonly IAsyncPolicy _retryPolicy;
+        private readonly ILogger<LoginService> _logger;
+
 
         public LoginService() { }
-        public LoginService(AGWDbContext dbContext, IAsyncPolicy retryPolicy)
+        public LoginService(AGWDbContext dbContext, IAsyncPolicy retryPolicy, ILogger<LoginService> logger)
         {
             _context = dbContext;
             _retryPolicy = retryPolicy;
+            _logger = logger;
         }
 
         public async Task<GeneralResponce> Login(LoginRequest loginRequest)

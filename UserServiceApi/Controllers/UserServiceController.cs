@@ -15,10 +15,13 @@ namespace UserServiceApi.Controllers
     public class UserServiceController : ControllerBase
     {
         private readonly IUserService _service;
+        private readonly ILogger<UserServiceController> _logger;
 
-        public UserServiceController(IUserService service)
+
+        public UserServiceController(IUserService service, ILogger<UserServiceController> logger)
         {
             _service = service;
+            _logger = logger;
         }
         [HttpGet("GetAllUser")]
         public async Task<GeneralResponse> GetAllUser()

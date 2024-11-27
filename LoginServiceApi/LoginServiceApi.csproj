@@ -13,6 +13,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.2.1" />
     <ProjectReference Include="..\EFramework\EFramework.csproj" />
+    <PackageReference Include="Serilog" Version="2.16.0" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="5.0.0" />
+    <PackageReference Include="Serilog.Sinks.Http" Version="5.0.0" />
   </ItemGroup>
 
 </Project>

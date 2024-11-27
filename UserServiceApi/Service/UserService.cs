@@ -10,17 +10,19 @@ namespace UserServiceApi.Service
     {
         private readonly AGWDbContext _context;
         private readonly IAsyncPolicy _retryPolicy;
+        private readonly ILogger<UserService> _logger;
+
 
 
         public UserService()
         {
 
         }
-        public UserService(AGWDbContext context, IAsyncPolicy retryPolicy)
+        public UserService(AGWDbContext context, IAsyncPolicy retryPolicy, ILogger<UserService> logger)
         {
             _context = context;
             _retryPolicy = retryPolicy;
-
+            _logger = logger;
         }
 
         public async Task<GeneralResponse> GetAllUser()

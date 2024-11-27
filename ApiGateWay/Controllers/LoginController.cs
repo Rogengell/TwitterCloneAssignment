@@ -13,9 +13,13 @@ using Microsoft.AspNetCore.Mvc;
 public class LoginController : Controller
 {
     private readonly ApiGateWay.Service.ILoginService _service;
-    public LoginController(ApiGateWay.Service.ILoginService service)
+    private readonly ILogger<LoginController> _logger;
+
+
+    public LoginController(ApiGateWay.Service.ILoginService service, ILogger<LoginController> logger)
     {
         _service = service;
+        _logger = logger;
     }
 
     [HttpGet("Login")]

@@ -13,9 +13,12 @@ using Microsoft.AspNetCore.Mvc;
 public class LoginServiceController : Controller
 {
     private readonly LoginServiceApi.Service.ILoginService _service;
-    public LoginServiceController(LoginServiceApi.Service.ILoginService service)
+    private readonly ILogger<LoginServiceController> _logger;
+
+    public LoginServiceController(LoginServiceApi.Service.ILoginService service, ILogger<LoginServiceController> logger)
     {
         _service = service;
+        _logger = logger;
     }
 
     [HttpPost("Login")]
