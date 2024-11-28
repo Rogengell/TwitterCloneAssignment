@@ -19,6 +19,7 @@ var fluentdPort = int.Parse(Environment.GetEnvironmentVariable("FLUENTD_PORT") ?
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
+    .Enrich.FromLogContext()
     .WriteTo.Fluentd(
         host: fluentdHost,
         port: fluentdPort,

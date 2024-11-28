@@ -8,9 +8,25 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using UserServiceApi;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration.GetSection("Settings").Get<Settings>();
+
+var fluentdHost = Environment.GetEnvironmentVariable("FLUENTD_HOST") ?? "fluentd";
+var fluentdPort = int.Parse(Environment.GetEnvironmentVariable("FLUENTD_PORT") ?? "24224");
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .Enrich.FromLogContext()
+    .WriteTo.Fluentd(
+        host: fluentdHost,
+        port: fluentdPort,
+        tag: "userServiceApi"  // Optional tag
+    )
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 string jwtIssuer = config.JwtIssuer;
 string jwtKey = config.JwtKey;
@@ -81,3 +97,5 @@ app.MapControllers();
 //app.UseHttpsRedirection();
 
 app.Run();
+
+AppDomain.CurrentDomain.ProcessExit += (sender, args) => Log.CloseAndFlush();

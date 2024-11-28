@@ -30,7 +30,7 @@ namespace ApiGateWay.Service
 
                 HttpClient client = _httpClient;
                 UserRequest userRequest = new UserRequest();
-                                
+
                 string json = JsonConvert.SerializeObject(userRequest);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
@@ -79,7 +79,7 @@ namespace ApiGateWay.Service
 
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    Console.WriteLine("Authorization failed. Check the token and claims.");
+                    return new GeneralResponce(401, "Authorization failed. Check the token and claims.");
                 }
 
                 string responseBody = await response.Content.ReadAsStringAsync();
@@ -118,7 +118,7 @@ namespace ApiGateWay.Service
 
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    Console.WriteLine("Authorization failed. Check the token and claims.");
+                    return new GeneralResponce(401, "Authorization failed. Check the token and claims.");
                 }
 
                 var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);

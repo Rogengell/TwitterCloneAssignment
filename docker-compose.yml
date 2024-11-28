@@ -102,6 +102,9 @@ services:
       - fluentd-logs:/fluentd/log # Fluentd logs volume
     environment:
       - FLUENTD_CONF=fluentd.conf
+    networks:
+      - microservice-network
+      - default
 
 volumes:
   fluentd-config:
