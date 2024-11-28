@@ -84,32 +84,26 @@ This will launch Swagger UI, where you can explore and test your API endpoints.
 
 We've already implemented a gateway in our system to facilitate communication and provide a single point of entry for users. This centralized approach enhances security by consolidating security measures. Additionally, the gateway improves scalability by efficiently handling increased traffic and optimizes performance through load distribution across backend services. It also simplifies API management by providing a centralized platform for managing and exposing APIs, as we will explore in more detail in future implementations.
 
-## Week 45 implementing some relaibility
+## Week 45 implementing some reliability
 
-we implementet a retry policy because it can significantly improve the reliability of our microservices architecture. By automatically retrying failed requests, we can handle temporary issues like network glitches or service overloads, but we have to keep in mind that we have to fail fast. Thats why it's good practis that we have to use a circuit breaker pattern to prevent excessive retries and protect against cascading failures. This helps us to temporarily halt retries when a service is consistently failing, allowing it to recover and preventing resource exhaustion. **the circuit breaker pattern is not implementet but we should defentliy consider to do**
+we implemented a retry policy because it can significantly improve the reliability of our microservices architecture. By automatically retrying failed requests, we can handle temporary issues like network glitches or service overloads, but we have to keep in mind that we have to fail fast. Thats why it's good practis that we have to use a circuit breaker pattern to prevent excessive retries and protect against cascading failures. This helps us to temporarily halt retries when a service is consistently failing, allowing it to recover and preventing resource exhaustion. **the circuit breaker pattern is not implemented but we should defentliy consider to do**
 
-## Week 46 Kubernates
-
-kubectl delete -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
-
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
-kubectl create sa webadmin -n kubernetes-dashboard
-kubectl create clusterrolebinding webadmin --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:webadmin
-kubectl create token webadmin -n kubernetes-dashboard
-kubectl proxy
-http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+## Week 46 Kubernetes
 
 To deploy our services and jobs to Kubernetes, we built Docker images for each component. Here are the common commands used to create these images:
 
 ```
 docker build -f LoginServiceApi/Dockerfile -t my-loginserviceapi .
 ```
+
 ```
 docker build -f UserServiceApi/Dockerfile -t my-userserviceapi .
 ```
+
 ```
 docker build -f ApiGateWay/Dockerfile -t my-apigateway .
 ```
+
 ```
 docker build -f EFramework/Migrations.Dockerfile -t my-ef-migration .
 ```
@@ -119,27 +113,37 @@ After building the Docker images, we deployed them to our Kubernetes cluster usi
 ```
 kubectl apply -f user-db-volume.yml
 ```
+
 ```
 kubectl apply -f user-db.yml
 ```
+
 ```
 kubectl apply -f userserviceapi.yml
 ```
+
 ```
 kubectl apply -f apigateway.yml
 ```
+
 ```
 kubectl apply -f loginserviceapi.yml
 ```
+
 ```
 kubectl apply -f migration_service.yml
 ```
+
 Once we had configured the pods, they were deployed into our Kubernetes cluster. Here are some screenshots of our system running within the Kubernetes environment.
 
 **screenshots her**
 
-## Week47 Security
+## Week 47 Security
 
 We implemented an authentication mechanism to secure communication between the gateway and the microservices. This involves generating JWT tokens, which are stored securely in a vault server to prevent sensitive information from being exposed in our codebase.
 
-http://127.0.0.1:30000/Login/Login?username=1234&password=1234
+## Week 48 microservice pattern (sidecar pattern)
+
+we used the sidecar pattern for at implement a monitoring in our twitter clone, so in order we are able to trace all from Warning up to fatal. So we will know when something breaks or went as not expected.
+
+**screenshots her**
