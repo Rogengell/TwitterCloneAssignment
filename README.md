@@ -136,18 +136,18 @@ kubectl apply -f migration_service.yml
 
 Once we had configured the pods, they were deployed into our Kubernetes cluster. Here are some screenshots of our system running within the Kubernetes environment.
 
-![Kubernetes](https://github.com/Rogengell/TwitterCloneAssignment/blob/main/Screenshots/image%kubernetes.png)
+![Kubernetes](https://github.com/Rogengell/TwitterCloneAssignment/blob/main/Screenshots/image%20kubernetes.png)
 
 
 ## Week 47 Security
 
 We implemented an authentication mechanism to secure communication between the gateway and the microservices. This involves generating JWT tokens, which are stored securely in a vault server to prevent sensitive information from being exposed in our codebase.
 
-![lvl1](https://github.com/Rogengell/TwitterCloneAssignment/blob/main/Screenshots/Screenshot%vault.png)
+![Vault](https://github.com/Rogengell/TwitterCloneAssignment/blob/main/Screenshots/Screenshot%20vault.png)
 
 
 ## Week 48 microservice pattern (sidecar pattern)
 
 we used the sidecar pattern for at implement a monitoring in our twitter clone, so in order we are able to trace all from Warning up to fatal. So we will know when something breaks or went as not expected.
 
-![Fluentd](https://github.com/Rogengell/TwitterCloneAssignment/blob/main/Screenshots/Screenshot%fluentd%los%example.png)
+![Fluentd](https://github.com/Rogengell/TwitterCloneAssignment/blob/main/Screenshots/Screenshot%20fluentd%20los%20example.png)
