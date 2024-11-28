@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Model;
 using Newtonsoft.Json;
 using Polly;
+using Serilog.Context;
 
 namespace ApiGateWay.Service
 {
@@ -32,181 +33,221 @@ namespace ApiGateWay.Service
 
         public async Task<GeneralResponce> Login(string email, string password)
         {
-            try
-            {
-                HttpClient client = _httpClient;
-                LoginRequest loginRequest = new LoginRequest(email, password);
-
-                string json = JsonConvert.SerializeObject(loginRequest);
-                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _secretSettings.MICRO_SERVICE_TOKEN.Trim());
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                HttpResponseMessage response = await client.PostAsync("http://loginserviceapi:8082/LoginService/Login", content);
-
-                string responseBody = await response.Content.ReadAsStringAsync();
-
-                if (response.StatusCode == HttpStatusCode.Unauthorized)
+            using (LogContext.PushProperty("Username", email ?? "UnknownUser"))
+                try
                 {
-                    Console.WriteLine("Authorization failed. Check the token and claims.");
+                    _logger.LogInformation($"Prepare for calling LoginService login for user {email}");
+                    HttpClient client = _httpClient;
+                    LoginRequest loginRequest = new LoginRequest(email, password);
+
+                    string json = JsonConvert.SerializeObject(loginRequest);
+                    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _secretSettings.MICRO_SERVICE_TOKEN.Trim());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    _logger.LogInformation($"Response from LoginService login for user {email}");
+                    HttpResponseMessage response = await client.PostAsync("http://loginserviceapi:8082/LoginService/Login", content);
+
+                    string responseBody = await response.Content.ReadAsStringAsync();
+
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        _logger.LogInformation($"Authorization failed for user {email}");
+                        return new GeneralResponce(401, "Authorization failed. Check the token and claims.");
+                    }
+
+                    var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
+
+                    if (generalResponce == null)
+                    {
+                        _logger.LogInformation($"Connection failed for user {email}");
+                        return new GeneralResponce(400, "connection failed");
+                    }
+                    _logger.LogInformation($"Login successful for user {email}");
+                    return generalResponce;
                 }
-
-                var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
-
-                if (generalResponce == null)
+                catch (System.Exception ex)
                 {
-                    return new GeneralResponce(400, "connection failed");
+                    var message = ex.Message + "\n" + ex.StackTrace + "\n" + ex.InnerException?.Message;
+                    Console.WriteLine(message);
+                    _logger.LogError(message, $"An error occurred during login for user {email}");
+                    return new GeneralResponce(400, message);
                 }
-
-                return generalResponce;
-            }
-            catch (System.Exception ex)
-            {
-                var message = ex.Message + "\n" + ex.StackTrace + "\n" + ex.InnerException?.Message;
-                Console.WriteLine(message);
-                return new GeneralResponce(400, message);
-            }
         }
 
         public async Task<GeneralResponce> CreateAccount(CreateRequest createRequest)
         {
-            try
+            using (LogContext.PushProperty("Username", createRequest.email ?? "UnknownUser"))
             {
-                HttpClient client = _httpClient;
-                string json = JsonConvert.SerializeObject(createRequest);
-                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _secretSettings.MICRO_SERVICE_TOKEN.Trim());
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                HttpResponseMessage response = await client.PutAsync("http://loginserviceapi:8082/LoginService/Create", content);
-
-                string responseBody = await response.Content.ReadAsStringAsync();
-
-                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                _logger.LogInformation($"Prepare for calling LoginService CreateAccount for user {createRequest.email}");
+                try
                 {
-                    Console.WriteLine("Authorization failed. Check the token and claims.");
+                    HttpClient client = _httpClient;
+                    string json = JsonConvert.SerializeObject(createRequest);
+                    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _secretSettings.MICRO_SERVICE_TOKEN.Trim());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    _logger.LogInformation($"Response from LoginService CreateAccount for user {createRequest.email}");
+                    HttpResponseMessage response = await client.PutAsync("http://loginserviceapi:8082/LoginService/Create", content);
+
+                    string responseBody = await response.Content.ReadAsStringAsync();
+
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        _logger.LogInformation($"Authorization failed for user {createRequest.email}");
+                        return new GeneralResponce(401, "Authorization failed. Check the token and claims.");
+                    }
+
+                    var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
+
+                    if (generalResponce == null)
+                    {
+                        _logger.LogInformation($"Connection failed for user {createRequest.email}");
+                        return new GeneralResponce(400, "connection failed");
+                    }
+                    _logger.LogInformation($"Create successful for user {createRequest.email}");
+                    return generalResponce;
                 }
-
-                var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
-
-                if (generalResponce == null)
+                catch (System.Exception ex)
                 {
-                    return new GeneralResponce(400, "connection failed");
+                    Console.WriteLine(ex.Message);
+                    _logger.LogError(ex, $"An error occurred during CreateAccount for user {createRequest.email}");
+                    return new GeneralResponce(400, ex.Message);
                 }
-
-                return generalResponce;
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return new GeneralResponce(400, ex.Message);
             }
         }
 
         public async Task<GeneralResponce> UpdateAccount(UpdateRequest updateRequest)
         {
-            try
+            using (LogContext.PushProperty("Username", updateRequest.Email ?? "UnknownUser"))
             {
-                HttpClient client = _httpClient;
-                string json = JsonConvert.SerializeObject(updateRequest);
-                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _secretSettings.MICRO_SERVICE_TOKEN.Trim());
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                HttpResponseMessage response = await client.PostAsync("http://loginserviceapi:8082/LoginService/Update", content);
-
-                string responseBody = await response.Content.ReadAsStringAsync();
-
-                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                _logger.LogInformation($"Prepare for calling LoginService UpdateAccount for user {updateRequest.Email}");
+                try
                 {
-                    Console.WriteLine("Authorization failed. Check the token and claims.");
+                    HttpClient client = _httpClient;
+                    string json = JsonConvert.SerializeObject(updateRequest);
+                    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _secretSettings.MICRO_SERVICE_TOKEN.Trim());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    _logger.LogInformation($"Response from LoginService UpdateAccount for user {updateRequest.Email}");
+                    HttpResponseMessage response = await client.PostAsync("http://loginserviceapi:8082/LoginService/Update", content);
+
+                    string responseBody = await response.Content.ReadAsStringAsync();
+
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        _logger.LogInformation($"Authorization failed for user {updateRequest.Email}");
+                        return new GeneralResponce(401, "Authorization failed. Check the token and claims.");
+                    }
+
+                    var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
+
+                    if (generalResponce == null)
+                    {
+                        _logger.LogInformation($"Connection failed for user {updateRequest.Email}");
+                        return new GeneralResponce(400, "connection failed");
+                    }
+                    _logger.LogInformation($"Update successful for user {updateRequest.Email}");
+                    return generalResponce;
                 }
-
-                var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
-
-                if (generalResponce == null)
+                catch (System.Exception ex)
                 {
-                    return new GeneralResponce(400, "connection failed");
+                    Console.WriteLine(ex.Message);
+                    _logger.LogError(ex, $"An error occurred during UpdateAccount for user {updateRequest.Email}");
+                    return new GeneralResponce(400, ex.Message);
                 }
-
-                return generalResponce;
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return new GeneralResponce(400, ex.Message);
             }
         }
 
         public async Task<GeneralResponce> DeleteAccount(DeleteRequest deleteRequest)
         {
-            try
+            using (LogContext.PushProperty("Username", deleteRequest.email ?? "UnknownUser"))
             {
-                HttpClient client = _httpClient;
-                string json = JsonConvert.SerializeObject(deleteRequest);
-                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _secretSettings.MICRO_SERVICE_TOKEN.Trim());
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                HttpResponseMessage response = await client.PostAsync("http://loginserviceapi:8082/LoginService/Delete", content);
-
-                string responseBody = await response.Content.ReadAsStringAsync();
-
-                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                _logger.LogInformation($"Prepare for calling LoginService DeleteAccount for user {deleteRequest.email}");
+                try
                 {
-                    Console.WriteLine("Authorization failed. Check the token and claims.");
+                    HttpClient client = _httpClient;
+                    string json = JsonConvert.SerializeObject(deleteRequest);
+                    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _secretSettings.MICRO_SERVICE_TOKEN.Trim());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    _logger.LogInformation($"Response from LoginService DeleteAccount for user {deleteRequest.email}");
+                    HttpResponseMessage response = await client.PostAsync("http://loginserviceapi:8082/LoginService/Delete", content);
+
+                    string responseBody = await response.Content.ReadAsStringAsync();
+
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        _logger.LogInformation($"Authorization failed for user {deleteRequest.email}");
+                        return new GeneralResponce(401, "Authorization failed. Check the token and claims.");
+                    }
+
+                    var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
+
+                    if (generalResponce == null)
+                    {
+                        _logger.LogInformation($"Connection failed for user {deleteRequest.email}");
+                        return new GeneralResponce(400, "connection failed");
+                    }
+
+                    _logger.LogInformation($"Delete successful for user {deleteRequest.email}");
+                    return generalResponce;
                 }
-
-                var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
-
-                if (generalResponce == null)
+                catch (System.Exception ex)
                 {
-                    return new GeneralResponce(400, "connection failed");
+                    Console.WriteLine(ex.Message);
+                    _logger.LogError(ex, $"An error occurred during DeleteAccount for user {deleteRequest.email}");
+                    return new GeneralResponce(400, ex.Message);
                 }
-
-                return generalResponce;
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return new GeneralResponce(400, ex.Message);
             }
         }
 
         public async Task<GeneralResponce> GetAuthenticated()
         {
-            try
+            using (LogContext.PushProperty("Username", "UnknownUser"))
             {
-                HttpClient client = _httpClient;
-
-                // client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _secretSettings.MICRO_SERVICE_TOKEN.Trim());
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                HttpResponseMessage response = await client.GetAsync("http://loginserviceapi:8082/Faucet/GetToken");
-                string responseBody = await response.Content.ReadAsStringAsync();
-
-                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                _logger.LogInformation($"Prepare for calling LoginService GetAuthenticated");
+                try
                 {
-                    Console.WriteLine("Authorization failed. Check the token and claims.");
+                    HttpClient client = _httpClient;
+
+                    // client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _secretSettings.MICRO_SERVICE_TOKEN.Trim());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    _logger.LogInformation($"Response from LoginService GetAuthenticated");
+                    HttpResponseMessage response = await client.GetAsync("http://loginserviceapi:8082/Faucet/GetToken");
+                    string responseBody = await response.Content.ReadAsStringAsync();
+
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        _logger.LogInformation($"Authorization failed for user UnknownUser");
+                        return new GeneralResponce(401, "Authorization failed. Check the token and claims.");
+                    }
+
+                    var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
+
+                    if (generalResponce == null)
+                    {
+                        _logger.LogInformation($"Connection failed for user UnknownUser");
+                        return new GeneralResponce(400, "connection failed");
+                    }
+
+                    _logger.LogInformation($"GetAuthenticated successful for user UnknownUser");
+                    return generalResponce;
                 }
-
-                var generalResponce = JsonConvert.DeserializeObject<GeneralResponce>(responseBody);
-
-                if (generalResponce == null)
+                catch (System.Exception ex)
                 {
-                    return new GeneralResponce(400, "connection failed");
+                    Console.WriteLine(ex.Message);
+                    _logger.LogError(ex, $"An error occurred during GetAuthenticated");
+                    return new GeneralResponce(400, ex.Message);
                 }
-
-                return generalResponce;
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return new GeneralResponce(400, ex.Message);
             }
         }
     }

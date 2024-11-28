@@ -6,6 +6,7 @@ using UserServiceApi.Service;
 using Microsoft.AspNetCore.Mvc;
 using UserServiceApi.Request_Responce;
 using Microsoft.AspNetCore.Authorization;
+using Serilog.Context;
 
 namespace UserServiceApi.Controllers
 {
@@ -26,74 +27,94 @@ namespace UserServiceApi.Controllers
         [HttpGet("GetAllUser")]
         public async Task<GeneralResponse> GetAllUser()
         {
-            try
+            using (LogContext.PushProperty("RequestId", Guid.NewGuid().ToString()))
             {
-                var result = await _service.GetAllUser();
-                if (result._status == 200)
+                _logger.LogInformation("GetAllUser attempt started");
+                try
                 {
-                    return new GeneralResponse(200, result._message, result._users);
+                    var result = await _service.GetAllUser();
+                    if (result._status == 200)
+                    {
+                        _logger.LogInformation($"GetAllUser successful");
+                        return new GeneralResponse(200, result._message, result._users);
+                    }
+                    else
+                    {
+                        _logger.LogWarning($"GetAllUser failed with status {result._status}");
+                        return new GeneralResponse(404, "there is no user in database");
+                    }
                 }
-                else
+                catch (System.Exception ex)
                 {
-                    return new GeneralResponse(404, "there is no user in database");
+                    _logger.LogError(ex, $"An error occurred during GetAllUser");
+                    return new GeneralResponse(400, ex.Message);
                 }
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine("Something went wrong GetAllUser" + ex.Message);
-                return new GeneralResponse(400, ex.Message);
             }
         }
 
         [HttpPost("GetUser")]
         public async Task<GeneralResponse> GetUser([FromBody] UserRequest searchRequest)
         {
-            if (!ModelState.IsValid)
+            using (LogContext.PushProperty("RequestId", Guid.NewGuid().ToString()))
             {
-                return new GeneralResponse(400, "Invalid data");
-            }
-            try
-            {
-                var result = await _service.GetUser(searchRequest);
-                if (result._status == 200)
+                _logger.LogInformation("GetUser attempt started");
+                if (!ModelState.IsValid)
                 {
-                    return new GeneralResponse(200, result._message, result._users);
+                    _logger.LogWarning("GetUser failed due to invalid data");
+                    return new GeneralResponse(400, "Invalid data");
                 }
-                else
+                try
                 {
-                    return new GeneralResponse(result._status, result._message);
+                    var result = await _service.GetUser(searchRequest);
+                    if (result._status == 200)
+                    {
+                        _logger.LogInformation($"GetUser successful for user {searchRequest.UserName}");
+                        return new GeneralResponse(200, result._message, result._users);
+                    }
+                    else
+                    {
+                        _logger.LogWarning($"GetUser failed for user {searchRequest.UserName} with status {result._status}");
+                        return new GeneralResponse(result._status, result._message);
+                    }
                 }
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine("Something went wrong GetUser" + ex.Message);
-                return new GeneralResponse(400, ex.Message);
+                catch (System.Exception ex)
+                {
+                    _logger.LogError(ex, $"An error occurred during GetUser for user {searchRequest.UserName}");
+                    return new GeneralResponse(400, ex.Message);
+                }
             }
         }
 
         [HttpPost("GetUserByTag")]
         public async Task<GeneralResponse> GetUserByTag([FromBody] UserRequest searchRequest)
         {
-            if (!ModelState.IsValid)
+            using (LogContext.PushProperty("RequestId", Guid.NewGuid().ToString()))
             {
-                return new GeneralResponse(400, "Invalid data");
-            }
-            try
-            {
-                var result = await _service.GetUserByTag(searchRequest);
-                if (result._status == 200)
+                _logger.LogInformation("GetUserByTag attempt started");
+                if (!ModelState.IsValid)
                 {
-                    return new GeneralResponse(200, result._message, result._users);
+                    _logger.LogWarning("GetUserByTag failed due to invalid data");
+                    return new GeneralResponse(400, "Invalid data");
                 }
-                else
+                try
                 {
-                    return new GeneralResponse(result._status, result._message);
+                    var result = await _service.GetUserByTag(searchRequest);
+                    if (result._status == 200)
+                    {
+                        _logger.LogInformation($"GetUserByTag successful for user {searchRequest.UserName}");
+                        return new GeneralResponse(200, result._message, result._users);
+                    }
+                    else
+                    {
+                        _logger.LogWarning($"GetUserByTag failed for user {searchRequest.UserName} with status {result._status}");
+                        return new GeneralResponse(result._status, result._message);
+                    }
                 }
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine("Something went wrong GetUserByTag" + ex.Message);
-                return new GeneralResponse(400, ex.Message);
+                catch (System.Exception ex)
+                {
+                    _logger.LogError(ex, $"An error occurred during GetUserByTag for user {searchRequest.UserName}");
+                    return new GeneralResponse(400, ex.Message);
+                }
             }
         }
     }
