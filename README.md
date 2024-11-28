@@ -80,15 +80,15 @@ This will launch Swagger UI, where you can explore and test your API endpoints.
 
 # Assignment #2 :memo:
 
-## Week 44 implementing Gateway
+## Week 44 implementing Gateway :see_no_evil:
 
 We've already implemented a gateway in our system to facilitate communication and provide a single point of entry for users. This centralized approach enhances security by consolidating security measures. Additionally, the gateway improves scalability by efficiently handling increased traffic and optimizes performance through load distribution across backend services. It also simplifies API management by providing a centralized platform for managing and exposing APIs, as we will explore in more detail in future implementations.
 
-## Week 45 implementing some reliability
+## Week 45 implementing some reliability :ambulance:
 
-we implemented a retry policy because it can significantly improve the reliability of our microservices architecture. By automatically retrying failed requests, we can handle temporary issues like network glitches or service overloads, but we have to keep in mind that we have to fail fast. Thats why it's good practis that we have to use a circuit breaker pattern to prevent excessive retries and protect against cascading failures. This helps us to temporarily halt retries when a service is consistently failing, allowing it to recover and preventing resource exhaustion. **the circuit breaker pattern is not implemented but we should defentliy consider to do**
+we implemented a retry policy because it can significantly improve the reliability of our microservices architecture. By automatically retrying failed requests, we can handle temporary issues like network glitches or service overloads, but we have to keep in mind that we have to fail fast. Thats why it's good practis that we have to use a circuit breaker pattern to prevent excessive retries and protect against cascading failures. This helps us to temporarily halt retries when a service is consistently failing, allowing it to recover and preventing resource exhaustion. 
 
-## Week 46 Kubernetes
+## Week 46 Kubernetes :technologist:
 
 To deploy our services and jobs to Kubernetes, we built Docker images for each component. Here are the common commands used to create these images:
 
@@ -139,15 +139,17 @@ Once we had configured the pods, they were deployed into our Kubernetes cluster.
 ![Kubernetes](https://github.com/Rogengell/TwitterCloneAssignment/blob/main/Screenshots/image%20kubernetes.png)
 
 
-## Week 47 Security
+## Week 47 Security :lock:
 
-We implemented an authentication mechanism to secure communication between the gateway and the microservices. This involves generating JWT tokens, which are stored securely in a vault server to prevent sensitive information from being exposed in our codebase.
+We implemented an authentication mechanism to secure communication between the gateway and the microservices. This involves generating JWT tokens, which are stored securely on a vault server to prevent sensitive information from being exposed in our codebase.  It also logs all secret access for auditing and compliance. By implementing Vault, we reduce the risk of leaks, improve security, and simplify secret management.
 
 ![Vault](https://github.com/Rogengell/TwitterCloneAssignment/blob/main/Screenshots/Screenshot%20vault.png)
 
 
-## Week 48 microservice pattern (sidecar pattern)
+## Week 48 microservice pattern (sidecar pattern) :passport_control:
 
-we used the sidecar pattern for at implement a monitoring in our twitter clone, so in order we are able to trace all from Warning up to fatal. So we will know when something breaks or went as not expected.
+In our Twitter clone, we implemented the sidecar pattern to enhance monitoring capabilities. This approach allows us to effectively trace and capture events ranging from warnings to critical errors (fatal). By doing so, we gain real-time visibility into system health and can promptly identify when something breaks or behaves unexpectedly.
 
 ![Fluentd](https://github.com/Rogengell/TwitterCloneAssignment/blob/main/Screenshots/Screenshot%20fluentd%20los%20example.png)
+
+Implementing monitoring in our Twitter clone is essential for ensuring system reliability and detecting issues early. It enables rapid identification of errors, minimizes downtime, and improves user experience by maintaining fast and consistent performance.
