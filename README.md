@@ -145,7 +145,6 @@ We implemented an authentication mechanism to secure communication between the g
 
 ![Vault](https://github.com/Rogengell/TwitterCloneAssignment/blob/main/Screenshots/Screenshot%20vault.png)
 
-
 ## Week 48 microservice pattern (sidecar pattern) :passport_control:
 
 In our Twitter clone, we implemented the sidecar pattern to enhance monitoring capabilities. This approach allows us to effectively trace and capture events ranging from warnings to critical errors (fatal). By doing so, we gain real-time visibility into system health and can promptly identify when something breaks or behaves unexpectedly.
