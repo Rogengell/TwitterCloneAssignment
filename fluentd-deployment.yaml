@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fluentd
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fluentd
+  template:
+    metadata:
+      labels:
+        app: fluentd
+    spec:
+      containers:
+        - name: fluentd
+          image: fluent/fluentd:v1.14-debian
+          ports:
+            - containerPort: 24224  # Fluentd input port
+            - containerPort: 24220  # Optional: Web interface for Fluentd monitoring
+          volumeMounts:
+            - name: fluentd-config-volume
+              mountPath: /fluentd/etc/fluentd.conf
+              subPath: fluentd.conf
+            - name: fluentd-logs
+              mountPath: /fluentd/log
+          env:
+            - name: FLUENTD_CONF
+              value: fluentd.conf  # Points to the mounted file
+      volumes:
+        - name: fluentd-config-volume
+          configMap:
+            name: fluentd-config  # Ensures the configMap is mounted
+        - name: fluentd-logs
+          emptyDir: {}  # Temporary storage for logs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fluentd
+  namespace: default
+spec:
+  ports:
+    - name: forward-port
+      port: 24224
+      targetPort: 24224
+    - name: monitoring-port
+      port: 24220
+      targetPort: 24220
+  selector:
+    app: fluentd

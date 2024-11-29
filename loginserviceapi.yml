@@ -19,6 +19,12 @@ spec:
         image: my-loginserviceapi
         imagePullPolicy: Never
         env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Development"
+        - name: FLUENTD_HOST
+          value: "fluentd"
+        - name: FLUENTD_PORT
+          value: "24224"
         - name: LOGIN_SERVICE_URL
           value: "http://loginserviceapi"
         ports:

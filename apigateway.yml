@@ -2,27 +2,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: userserviceapi
+  name: apigateway
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: userserviceapi
+      app: apigateway
   template:
     metadata:
       labels:
-        app: userserviceapi
+        app: apigateway
     spec:
       containers:
-      - name: userserviceapi
-        image: my-userserviceapi
+      - name: apigateway
+        image: my-apigateway
         imagePullPolicy: Never
         env:
-        - name: LOGIN_SERVICE_URL
-          value: "http://userserviceapi"
-        ports:
-        - containerPort: 8081
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Development"
+        - name: FLUENTD_HOST
+          value: "fluentd"
+        - name: FLUENTD_PORT
+          value: "24224"
+        - name: API_GATEWAY_URL
+          value: "http://apigateway"
       initContainers:
       - name: wait-for-db
         image: busybox
@@ -31,11 +35,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: userserviceapi
+  name: apigateway
   namespace: default
 spec:
-  selector:
-    app: userserviceapi
+  type: NodePort
   ports:
-  - port: 8081
-    targetPort: 8081
+  - port: 8080
+    nodePort: 30001
+  selector:
+    app: apigateway
