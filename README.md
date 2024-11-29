@@ -86,7 +86,7 @@ We've already implemented a gateway in our system to facilitate communication an
 
 ## Week 45 implementing some reliability :ambulance:
 
-we implemented a retry policy because it can significantly improve the reliability of our microservices architecture. By automatically retrying failed requests, we can handle temporary issues like network glitches or service overloads, but we have to keep in mind that we have to fail fast. Thats why it's good practis that we have to use a circuit breaker pattern to prevent excessive retries and protect against cascading failures. This helps us to temporarily halt retries when a service is consistently failing, allowing it to recover and preventing resource exhaustion. 
+we implemented a retry policy because it can significantly improve the reliability of our microservices architecture. By automatically retrying failed requests, we can handle temporary issues like network glitches or service overloads, but we have to keep in mind that we have to fail fast. Thats why it's good practis that we have to use a circuit breaker pattern to prevent excessive retries and protect against cascading failures. This helps us to temporarily halt retries when a service is consistently failing, allowing it to recover and preventing resource exhaustion.
 
 ## Week 46 Kubernetes :technologist:
 
@@ -97,7 +97,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/a
 ```
 
 ```
-kubectl create sa webadmin -n kubernetes-dashboard 
+kubectl create sa webadmin -n kubernetes-dashboard
 kubectl create clusterrolebinding webadmin --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:webadmin
 ```
 
@@ -150,7 +150,7 @@ kubectl apply -f vault-data-pvc.yaml
 kubectl apply -f vault-deployment.yaml
 ```
 
-**REMENBER LS AND NOT CRLF, IT RUNS ON LINEX NOW WINDOWS**
+**REMEMBER LS AND NOT CRLF, IT RUNS ON LINUX NOW WINDOWS**
 
 ```
 kubectl create configmap fluentd-config --from-file=fluentd.conf
@@ -160,24 +160,36 @@ kubectl create configmap fluentd-config --from-file=fluentd.conf
 kubectl apply -f fluentd-deployment.yaml
 ```
 
-Now before we go futher, we want to setup Vault.
+Now before we go further, we want to setup Vault.
+
+```
 http://localhost:8200
+```
+
 We will setup a user, names "user" and a password "1234".
 
 We will also make a policy:
+
+```
 path "secret/*" {
 	capabilities = ["read"]
 }
+```
 
-We use the already exising Secrets kv engines.
-We also make the secret token, with key MICRO_SERVICE_TOKEN, and a for now random token.
+We use the already existing Secrets kv engines.
+We also make the secret token, with key **MICRO_SERVICE_TOKEN**, and a for now random token.
 
 ```
 kubectl apply -f apigateway.yml
 ```
 
-Now that the apiGateWay is running, we call http://localhost:30001/Login/GEtAuthenticated in somthing like postman.
-Then we enter the Vault again, and update the Token, with what is returned in the previus call.
+Now that the apiGateWay is running, we call
+
+```
+http://localhost:30001/Login/GEtAuthenticated
+```
+
+in something like postman. Then we enter the Vault again, and update the Token, with what is returned in the previous call.
 
 ```
 kubectl rollout restart deployment/apigateway
@@ -199,10 +211,9 @@ Once we had configured the pods, they were deployed into our Kubernetes cluster.
 
 ![Kubernetes](https://github.com/Rogengell/TwitterCloneAssignment/blob/main/Screenshots/image%20kubernetes.png)
 
-
 ## Week 47 Security :lock:
 
-We implemented an authentication mechanism to secure communication between the gateway and the microservices. This involves generating JWT tokens, which are stored securely on a vault server to prevent sensitive information from being exposed in our codebase.  It also logs all secret access for auditing and compliance. By implementing Vault, we reduce the risk of leaks, improve security, and simplify secret management.
+We implemented an authentication mechanism to secure communication between the gateway and the microservices. This involves generating JWT tokens, which are stored securely on a vault server to prevent sensitive information from being exposed in our codebase. It also logs all secret access for auditing and compliance. By implementing Vault, we reduce the risk of leaks, improve security, and simplify secret management.
 
 ![Vault](https://github.com/Rogengell/TwitterCloneAssignment/blob/main/Screenshots/Screenshot%20vault.png)
 
@@ -214,11 +225,27 @@ In our Twitter clone, we implemented the sidecar pattern to enhance monitoring c
 
 Implementing monitoring in our Twitter clone is essential for ensuring system reliability and detecting issues early. It enables rapid identification of errors, minimizes downtime, and improves user experience by maintaining fast and consistent performance.
 
+to see the logs of our monitoring you can run thus commands in the terminal
+with this you get a list of all pods
 
+```
 kubectl get pods -l app=fluentd
+```
 
+her we enter Linux terminal from the selected pod
+
+```
 kubectl exec -it <fluentd-pod-name> -- bash
+```
 
+her we get a list of all logs
+
+```
 ls /fluentd/log
+```
 
+with this we executer / open the log file in the terminal
+
+```
 cat /fluentd/log/<Name of the log file ex: apigateway.log.20241129.log>
+```
