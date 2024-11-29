@@ -90,6 +90,30 @@ we implemented a retry policy because it can significantly improve the reliabili
 
 ## Week 46 Kubernetes :technologist:
 
+This is need to have acces to the dashbord
+
+```
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+```
+
+```
+kubectl create sa webadmin -n kubernetes-dashboard 
+kubectl create clusterrolebinding webadmin --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:webadmin
+```
+
+```
+kubectl create token webadmin -n kubernetes-dashboard
+```
+
+```
+kubectl proxy
+```
+
+```
+http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+
+```
+
 To deploy our services and jobs to Kubernetes, we built Docker images for each component. Here are the common commands used to create these images:
 
 ```
@@ -119,15 +143,52 @@ kubectl apply -f user-db.yml
 ```
 
 ```
-kubectl apply -f userserviceapi.yml
+kubectl apply -f vault-data-pvc.yaml
 ```
+
+```
+kubectl apply -f vault-deployment.yaml
+```
+
+**REMENBER LS AND NOT CRLF, IT RUNS ON LINEX NOW WINDOWS**
+
+```
+kubectl create configmap fluentd-config --from-file=fluentd.conf
+```
+
+```
+kubectl apply -f fluentd-deployment.yaml
+```
+
+Now before we go futher, we want to setup Vault.
+http://localhost:8200
+We will setup a user, names "user" and a password "1234".
+
+We will also make a policy:
+path "secret/*" {
+	capabilities = ["read"]
+}
+
+We use the already exising Secrets kv engines.
+We also make the secret token, with key MICRO_SERVICE_TOKEN, and a for now random token.
 
 ```
 kubectl apply -f apigateway.yml
 ```
 
+Now that the apiGateWay is running, we call http://localhost:30001/Login/GEtAuthenticated in somthing like postman.
+Then we enter the Vault again, and update the Token, with what is returned in the previus call.
+
+```
+kubectl rollout restart deployment/apigateway
+```
+
 ```
 kubectl apply -f loginserviceapi.yml
+```
+
+```
+kubectl apply -f userserviceapi.yml
 ```
 
 ```
@@ -152,3 +213,12 @@ In our Twitter clone, we implemented the sidecar pattern to enhance monitoring c
 ![Fluentd](https://github.com/Rogengell/TwitterCloneAssignment/blob/main/Screenshots/Screenshot%20fluentd%20los%20example.png)
 
 Implementing monitoring in our Twitter clone is essential for ensuring system reliability and detecting issues early. It enables rapid identification of errors, minimizes downtime, and improves user experience by maintaining fast and consistent performance.
+
+
+kubectl get pods -l app=fluentd
+
+kubectl exec -it <fluentd-pod-name> -- bash
+
+ls /fluentd/log
+
+cat /fluentd/log/<Name of the log file ex: apigateway.log.20241129.log>
